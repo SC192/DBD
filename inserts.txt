@@ -1,0 +1,442 @@
+CREATE TABLE CLIENTE
+(
+  RUC VARCHAR(11) NOT NULL,
+  RAZON_SOCIAL VARCHAR(150) NOT NULL,
+  PRIMARY KEY (RUC)
+);
+INSERT INTO CLIENTE VALUES 
+('20498888217','MISION CEMENT.CATOLI.PARQUE DEL RECUERDO'), 
+('20261159733','COMITE DE OPERACION ECONOMICA DEL SISTEMA INTERCONECTADO NACIONAL'), 
+('20522386848','ALAMO COMPANY S.A.C.'),
+('20502780779','MUNDO INMOBILIARIO S.A.C.'),
+('20524137969','NEXO DESARROLLO INMOBILIARIO S.A.C.');
+
+
+CREATE TABLE PRACTICA
+(
+  DESCRIPCION VARCHAR(600) NOT NULL,
+  TIPO_PRACTICA VARCHAR(8) NOT NULL,
+  COD_PRACTICA VARCHAR(9) NOT NULL,
+  PRIMARY KEY (COD_PRACTICA)
+);
+INSERT INTO PRACTICA VALUES 
+('Realizó sus actividades en menos horas estimadas','BUENA' , 'P-0000001'), 
+('Se realizó sus actividad en más horas estimadas','MALA' , 'P-0000002'), 
+('Se realizó la actividad con dificultades técnicas','MALA' , 'P-0000003'),
+('Se realizaron acciones preventivas para evitar riesgos en la actividad','BUENA','P-0000004'),
+('No se realizo un seguimiento constante de las actividades del proyecto", 'MALA','P-0000005');
+
+
+CREATE TABLE TIPO_GASTO
+(
+  TIPO VARCHAR(20) NOT NULL,
+  DESCRIPCION VARCHAR(600),
+  COD_TIPO VARCHAR(5) NOT NULL,
+  PRIMARY KEY (COD_TIPO)
+);
+INSERT INTO TIPO_GASTO (TIPO,COD_TIPO) VALUES
+('ALIMENTOS','AL'),
+('VIATICOS','VT'),
+('ESTADIA','ET'),
+('MOVILIDAD','MV'),
+('PASAJES','PS');
+
+
+CREATE TABLE TIPO_COMPROBANTE
+(
+  TIPO VARCHAR(20) NOT NULL,
+  DESCRIPCION VARCHAR(600),
+  COD_TIPO VARCHAR(5) NOT NULL,
+  PRIMARY KEY (COD_TIPO)
+);
+INSERT INTO TIPO_COMPROBANTE (TIPO,COD_TIPO) VALUES
+('FACTURA','FT'),
+('RECIBO POR HONORARIO','RH'),
+('BOLETA DE VENTA','BV'),
+('RECIBO POR SERVICIOS','RS'),
+('BOLETO DE TRANSPORTE','BT');
+
+
+CREATE TABLE MONEDA
+(
+  COD_MONEDA VARCHAR(5) NOT NULL,
+  NOMBRE VARCHAR(20) NOT NULL,
+  PRIMARY KEY (COD_MONEDA)
+);
+INSERT INTO MONEDA VALUES
+('USD','DOLAR AMERICANO'),
+('PEN','SOL'),
+('EUR','EUROS'),
+('JPY','YEN JAPONES'),
+('CNY','YUAN CHINO');
+
+
+CREATE TABLE TIPO_REPORTE
+(
+  DESCRIPCION VARCHAR(600),
+  TIPO VARCHAR(20) NOT NULL,
+  COD_TIPO VARCHAR(5) NOT NULL,
+  PRIMARY KEY (COD_TIPO)
+);
+INSERT INTO TIPO_REPORTE (TIPO,COD_TIPO) VALUES
+('SEMANAL','S');
+('FINAL','F'),
+('POR ACTIVIDAD','A');
+
+
+CREATE TABLE FIRMA
+(
+  COD_FIRMA VARCHAR(9) NOT NULL,
+  FIRMA VARCHAR(600) NOT NULL,
+  PRIMARY KEY (COD_FIRMA)
+);
+INSERT INTO FIRMA VALUES
+('FV455ev5F','https://i.ibb.co/Yb5Mb9N/Eddy-Calderon.jpg'),
+('v511s5D3d','https://i.ibb.co/vhwubHBC85hc6/Nicole-Cabrera.jpg'),
+('c75svsd7D','https://i.ibb.co/cw45Dq54/Ricardo-Macias.jpg'),
+('FXkcs1cd7','https://i.ibb.co/XVQ4rgx/Leonardo-Dejo.png'),
+('NCjv47czc','https://i.ibb.co/v564ev445C/Renzo-Salazar.png'),
+('jfvJ4C7AJ','https://i.ibb.co/sdc51S5A/Miguel-Cabellos.png'),
+('4vsj5DS4s','https://i.ibb.co/VYfFkbx/Oscar-Quiroga.png'),
+('s5NV5nvd5','https://i.ibb.co/cw45w45S/Giuliana-Casalino.png'),
+('vf44S2vs2','https://i.ibb.co/dc54CC4sd/David-Ramos.png'),
+('4vjh5v5VK','https://i.ibb.co/brV9KQD/Manuel-Chavez.jpg'),
+('7WEH5jv5c','https://i.ibb.co/c4c4WCc5/Cristhian-Choque.jpg'),
+('88J7vhdc9','https://i.ibb.co/brV9KQD/Annie-Atalaya.jpg'),
+('c5d8vhJSV','https://i.ibb.co/jznVyCK/Aldo-Guinet.png'),
+('VXCJ6vn54','https://i.ibb.co/whCYTqn/David-Carvero.jpg'),
+('hdc4X4HB5','https://i.ibb.co/wh57scb/Monica-Camargo.jpg'),
+('SC45CI156','https://sobrehistoria.com//wp-content/uploads/2010/08/firmas-y-grafologia-600x431.jpg');
+
+
+CREATE TABLE PERSONA
+(
+  DNI VARCHAR(8) NOT NULL,
+  PRIMER_NOMBRE VARCHAR(40) NOT NULL,
+  APELLIDO_M VARCHAR(20) NOT NULL,
+  APELLIDO_P VARCHAR(20) NOT NULL,
+  COD_FIRMA VARCHAR(9) NOT NULL,
+  PRIMARY KEY (DNI),
+  FOREIGN KEY (COD_FIRMA) REFERENCES FIRMA(COD_FIRMA)
+);
+INSERT INTO PERSONA(DNI, PRIMER_NOMBRE,  APELLIDO_P, APELLIDO_M,COD_FIRMA) VALUES ('48634854','EDDY','CALDERON','SAAVEDRA','FV455ev5F'), 
+('52485215','NICOLE','CABRERA','RIVERA','v511s5D3d'), 
+('64585219','RICARDO','MACIAS','PIZARRO','c75svsd7D'),
+('54684534','LEONARDO','DEJO','PRADO','FXkcs1cd7'), 
+('48455384','RENZO','SALAZAR','VALLEJO','NCjv47czc'),
+('51316598','MIGUEL','CABELLOS','MOORE','jfvJ4C7AJ'),
+('68458747','OSCAR','QUIROGA','BECERRA','4vsj5DS4s'), 
+('41256489','GIULIANA','CASALINO','GUERRERO','s5NV5nvd5'),
+('56269561','DAVID','RAMOS','CHAVEZ','vf44S2vs2'),
+('54684528','MANUEL','CHAVEZ','CASTRO','4vjh5v5VK'), 
+('41584794','CRISTHIAN','CHOQUE','LEON','7WEH5jv5c'), 
+('32126548','ANNIE','ATALAYA','TAFUR','88J7vhdc9'), 
+('48158468','ALDO','GUINET','SANDRO','c5d8vhJSV'), ('51845975','DAVID','CARVERO','ZAPATA','VXCJ6vn54'),
+('65161491','MONICA','CAMARGO','CASIMIRO','hdc4X4HB5');
+ 
+
+CREATE TABLE PRESUPUESTO
+(
+  COD_PRESUPUESTO VARCHAR(9) NOT NULL,
+  COSTO_EST NUMERIC(12,2) NOT NULL,
+  COD_MONEDA VARCHAR(5) NOT NULL,
+  PRIMARY KEY (COD_PRESUPUESTO),
+  FOREIGN KEY (COD_MONEDA) REFERENCES MONEDA(COD_MONEDA)
+);
+INSERT INTO PRESUPUESTO VALUES 
+('D4V7E4F7', 12751.00,'USD'), 
+('RF65E8F5', 9100.23,'USD'), 
+('S8DC56W9', 6852.30,'USD'), 
+('EF568CVE', 4253.27,'USD'),
+('JV845cs4', 7253.27,'USD');
+
+
+CREATE TABLE GASTO
+(
+  COD_GASTO VARCHAR(9) NOT NULL,
+  MAX_REMU NUMERIC(6,2) NOT NULL,
+  COD_MONEDA VARCHAR(5) NOT NULL,
+  PRIMARY KEY (COD_GASTO),
+  FOREIGN KEY (COD_MONEDA) REFERENCES MONEDA(COD_MONEDA)
+);
+INSERT INTO  GASTO VALUES  
+('G-0000001', 1000.00,'PEN'), 
+('G-0000002', 960.00,'PEN'),
+('G-0000003', 800.00,'PEN'), 
+('G-0000004', 880.00,'PEN'),
+('G-0000005', 900.00,'PEN'),
+('G-0000006', 980.00,'PEN'),
+('G-0000007', 1280.00,'PEN'), 
+('G-0000008', 1200.00,'PEN');
+
+
+CREATE TABLE TRABAJADOR
+(
+  CONTRASENIA VARCHAR(20) NOT NULL,
+  DNI VARCHAR(8) NOT NULL,
+  PRIMARY KEY (DNI),
+  FOREIGN KEY (DNI) REFERENCES PERSONA(DNI)
+);
+INSERT INTO TRABAJADOR VALUES 
+('reg1S5G2','54684528'), 
+('SB5b75A1','41584794'), 
+('sdvb5d21vfae','32126548');
+
+
+CREATE TABLE CONTACTO
+(
+  DNI VARCHAR(8) NOT NULL,
+  RUC VARCHAR(11) NOT NULL,
+  PRIMARY KEY (DNI),
+  FOREIGN KEY (DNI) REFERENCES PERSONA(DNI),
+  FOREIGN KEY (RUC) REFERENCES CLIENTE(RUC)
+);
+INSERT INTO CONTACTO VALUES
+('48634854','20498888217'), 
+('52485215','20498888217'), 
+('64585219','20261159733'),
+('54684534','20261159733'), 
+('48455384','20261159733'),
+('51316598','20522386848'),
+('68458747','20522386848'), 
+('41256489','20502780779'),
+('56269561','20502780779'), 
+('48158468','20502780779'), 
+('51845975','20524137969'),
+('65161491','20524137969');
+
+---MODIFICAR TODAS LAS FECHAS-----------
+CREATE TABLE COMPROBANTE_PAGO
+(
+  IMPORTE NUMERIC(6,2) NOT NULL,
+  FECHA DATE NOT NULL,
+  PROVEEDOR VARCHAR(80) NOT NULL,
+  NUMERO VARCHAR(11) NOT NULL,
+  DESCRIPCION VARCHAR(600),
+  COD_GASTO VARCHAR(9) NOT NULL,
+  COD_MONEDA VARCHAR(5) NOT NULL,
+  COD_TIPO_COMP VARCHAR(5) NOT NULL,
+  COD_TIPO_GASTO VARCHAR(5) NOT NULL,
+  PRIMARY KEY (NUMERO),
+  FOREIGN KEY (COD_GASTO) REFERENCES GASTO(COD_GASTO),
+  FOREIGN KEY (COD_MONEDA) REFERENCES MONEDA(COD_MONEDA),
+  FOREIGN KEY (COD_TIPO_COMP) REFERENCES TIPO_COMPROBANTE(COD_TIPO),
+  FOREIGN KEY (COD_TIPO_GASTO) REFERENCES TIPO_GASTO(COD_TIPO)
+);
+INSERT INTO COMPROBANTE_PAGO (IMPORTE, FECHA, PROVEEDOR,NUMERO,COD_GASTO,COD_MONEDA,COD_TIPO_COMP,COD_TIPO_GASTO) VALUES 
+(180, 15/12/2021,'Rappi', '00000000001','G-0000001', 'PEN', 'BV' ,'AL'), 
+(25,18/12/2021,'Uber','00000000002','G-0000001','PEN','RS','PS'),
+(220, 05/08/2020,'San Agustín Posada del Monasterio', '00000000002', 'G-0000001','PEN','BV','ET'),
+(120, 05/08/2020,'Latam airlines','00000000103','G-0000002','USD','BT','PS'),
+(100,06/08/2020,'Atunpa','00015000003','G-0000002','PEN','BV','AL'),
+(30,25/05/2019,'Uber','00007500001','G-0000003','PEN','RS','PS'),
+(180,25/05/2019,'Latam airlines','00000084001','G-0000004','USD','BT','PS'),
+(120,25/05/2019,'El balcon Cusco Hotel','00040080001','G-0000004','PEN','BV','ET'),
+(35,25/05/2019,'Uber','14000070001','G-0000005','PEN','RS','PS'),(180,25/05/2019,'Al Toke Pez','10000070001','G-0000005','PEN','BV','AL'),(30,25/05/2019,'Uber','20000000001','G-0000005','PEN','RS','PS');
+(22.5,25/05/2019,'Uber','10000870001','G-0000006','PEN','RS','PS'),
+(190.5,25/05/2019,'El Rincon de Vallejo','10009001001','G-0000007','PEN','BV','AL'),
+(140,25/05/2019,'Latam Airlines','10770000001','G-0000007','USD','BT','PS'),
+(19.5,25/05/2019,'Uber','19000070001','G-0000008','PEN','RS','PS');
+-----------------------------------------
+
+
+CREATE TABLE PERFIL
+(
+  NOMBRE VARCHAR(20) NOT NULL,
+  SUELDO NUMERIC(6,2) NOT NULL,
+  COD_MONEDA VARCHAR(5) NOT NULL,
+  PRIMARY KEY (NOMBRE),
+  FOREIGN KEY (COD_MONEDA) REFERENCES MONEDA(COD_MONEDA)
+);
+INSERT INTO PERFIL VALUES 
+('EJECUTIVO', 15.00), 
+('PROJECT MANAGER', 12.00), 
+('SENIOR ANALYST'), 
+('JUNIOR ANALYST', 4.00), 
+('SENIOR DEVELOPER', 5.00), 
+('JUNIOR DEVELOPER', 3.00), 
+('PRACTICANTE', 2.00), 
+('SUPPORT SERVICE', 5.00), 
+('GERENTE DE PROYECTOS', 50.00);
+
+
+CREATE TABLE CORREO
+(
+  CORREO VARCHAR(60) NOT NULL,
+  DNI VARCHAR(8) NOT NULL,
+  PRIMARY KEY (CORREO, DNI),
+  FOREIGN KEY (DNI) REFERENCES PERSONA(DNI)
+);
+INSERT INTO CORREO VALUES
+('48634854','eddy.calderon@parquedelrecuerdo.com'), 
+('52485215','nicole.cabrera@parquedelrecuerdo.com'), 
+('64585219','ricardo.macias@coes.com'),
+('54684534','leonardo.dejo@coes.com'),
+('48455384','renzo.salazar@coes.com'),
+('51316598','miguel.cabellos@alamocompany.com'),
+('68458747','oscar.quiroga@alamocompany.com'),
+('41256489','giuliana.casalino@mundoinmobiliario.com'),
+('56269561','david.ramos@mundoinmobiliario.com'),
+('54684528','manuel.chavez@assetec.com'),
+('41584794','cristhian.choque@assetec.com'),
+('32126548','annie.atalaya@assetec.com'),
+('48158468','aldo.guinet@mundoinmobiliario.com'),('51845975','david.carvero@nexoinmobiliario.com'),
+('65161491','monica.camargo@nexoinmobiliario.com');
+
+
+CREATE TABLE DIRECCION
+(
+  COD_DIRECCION VARCHAR(9) NOT NULL,
+  COD_POSTAL VARCHAR(10) NOT NULL,
+  NOMBRE VARCHAR(35) NOT NULL,
+  UNIDAD VARCHAR(35),
+  DISTRITO VARCHAR(35) NOT NULL,
+  PROVINCIA VARCHAR(35) NOT NULL,
+  PAIS VARCHAR(35) NOT NULL,
+  DNI VARCHAR(8) NOT NULL,
+  PRIMARY KEY (COD_DIRECCION, DNI),
+  FOREIGN KEY (DNI) REFERENCES PERSONA(DNI)
+);
+INSERT INTO DIRECCION  (DNI, COD_POSTAL, NOMBRE, DISTRITO, PROVINCIA, PAIS) VALUES 
+('48634854','12345','Mz C lote 14 Proyectos Especiales 2da Etapa','San Juan de Lurigancho','Lima','Perú'), ('54684534','12345','Av Antonio José de Sucre 698','Pueblo Libre','Lima','Perú'), 
+('68458747','12345','Av. Pacasmayo 616','Cercado de Lima','Lima','Perú'), 
+('54684528','12345','Jirón Miro Quesada 193','Cercado de Lima','Lima','Perú'), 
+('48158468','12345','Calle Sta Margarita 124','La Molina','Lima','Perú'), 
+('51845975','12345','Calle Carlos Augusto Salaverry 185','San Miguel','Lima','Perú');
+
+
+CREATE TABLE TELEFONO
+(
+  NUMERO VARCHAR(15) NOT NULL,
+  PREFIJO VARCHAR(3) NOT NULL,
+  DNI VARCHAR(8) NOT NULL,
+  PRIMARY KEY (NUMERO, DNI),
+  FOREIGN KEY (DNI) REFERENCES PERSONA(DNI)
+);
+INSERT INTO TELEFONO VALUES 
+('947123474','51','48634854'), 
+('923546586','51','52485215'), 
+('999876543','51','64585219'),
+('922250482','51','54684534'),
+('919218864','51','48455384'),
+('913716553','51','51316598'),
+('921274937','51','68458747'),
+('932964896','51','41256489'),
+('972013484','51','56269561'),
+('979766233','51','54684528'),
+('989723453','51','41584794'),
+('953466231','51','32126548'),
+('940403520','51','48158468'),('924767064','51','51845975'),
+('943001313','51','65161491');
+
+
+CREATE TABLE PROYECTO
+(
+  NOMBRE VARCHAR(200) NOT NULL,
+  COD_PROYECTO VARCHAR(9) NOT NULL,
+  ESTADO VARCHAR(20) NOT NULL,
+  FECHA_FIN_REAL DATE NOT NULL,
+  FECHA_INICIO_REAL DATE NOT NULL,
+  FECHA_INICIO_EST DATE NOT NULL,
+  FECHA_FIN_EST DATE NOT NULL,
+  DESCRIPCION VARCHAR(600),
+  COD_PRESUPUESTO VARCHAR(9) NOT NULL,
+  PRIMARY KEY (COD_PROYECTO),
+  FOREIGN KEY (COD_PRESUPUESTO) REFERENCES PRESUPUESTO(COD_PRESUPUESTO)
+);
+INSERT INTO PROYECTO VALUES (NOMBRE, COD_PROYECTO,ESTADO,FECHA_INICIO_EST,FECHA_INICIO_REAL,FECHA_FIN_EST,COD_PRESUPUESTO)
+('Aplicativo de ventas','A-2021015','PROCESO',13/11/2021,14/11/2021,14/01/2022,'JV845cs4');
+INSERT INTO PROYECTO VALUES (NOMBRE, COD_PROYECTO,ESTADO,FECHA_INICIO_EST,FECHA_INICIO_REAL,FECHA_FIN_EST,FECHA_FIN_REAL,COD_PRESUPUESTO)
+('IMPLEMENTACION DEL APLICATIVO PRONÓSTICO DE LA DEMANDA', 'A-2020089', 'FINALIZADO',2020-04-25,2020-04-24,2020-08-09,2020-08-14, 'EF568CVE'),
+('Aplicativo de Intervenciones','A-2019059', 'FINALIZADO', 2019-10-20,2019-10-25,2019-12-16,2019-12-19, 'S8DC56W9'), 
+('Paltarumi sac-web app', 'A-2019123', 'FINALIZADO', 2019-12-27,2019-12-30,2020-04-01,2020-04-03, 'RF65E8F5'), 
+('Asignación de Responsabilidad de Pagos de SST y SCT', 'A-2021045', 'FINALIZADO', 2021-11-04,2021-09-03,2021-11-09,2021-11-09, 'D4V7E4F7');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+CREATE TABLE ACTA
+(
+  FECHA DATE NOT NULL,
+  COD_ACTA VARCHAR(9) NOT NULL,
+  ESTADO VARCHAR(20) NOT NULL,
+  COD_PROYECTO VARCHAR(9) NOT NULL,
+  PRIMARY KEY (COD_ACTA),
+  FOREIGN KEY (COD_PROYECTO) REFERENCES PROYECTO(COD_PROYECTO)
+);
+INSERT INTO ACTA VALUES 
+(2020-08-16, 'ER4V9RV00', 'ACEPTADA','A-2020089'), 
+(2019-12-20,'CE4V54V00','RECHAZADA','A-2019059'), 
+(2019-12-22,'SC45DV100','ACEPTADA','A-2019059'),
+(2020-04-05, 'SC45CW500','ACEPTADA','A-2019123');
+INSERT INTO ACTA (FECHA,COD_ACTA,COD_PROYECTO) VALUES 
+(2021-11-10,'D12C68E00','A-2021045');
+
+
+CREATE TABLE ACTA_ACUERDO
+(
+  ACUERDO VARCHAR(600) NOT NULL,
+  COD_ACUERDO VARCHAR(9) NOT NULL,
+  COD_ACTA VARCHAR(9) NOT NULL,
+  PRIMARY KEY (COD_ACUERDO),
+  FOREIGN KEY (COD_ACTA) REFERENCES ACTA(COD_ACTA)
+);
+INSERT INTO ACUERDO VALUES 
+('ASSETEC ha realizado y culminado a satisfacción del COES-SINAC las actividades relacionadas a la Fase 3 – Implantación y Cierre del Proyecto de implementación del aplicativo del Pronostico de la Demanda Segunda Etapa, de conformidad con los miembros del Comité y en cumplimiento de los entregables requeridos en los Términos de referencia.','ER4V9RV01','ER4V9RV00'),
+('En la fecha el sistema se encuentra en producción en los servidores de la Intranet/Extranet del COES-SINAC.',''ER4V9RV02',''ER4V9RV00'),
+('Por el presente documento ASSETEC ha realizado y culminado a satisfacción del COES-SINAC las actividades establecidos en el proyecto del Pronóstico de la Demanda segunda Etapa.','ER4V9RV03','ER4V9RV00'), 
+('Por este mismo documento el COES-SINAC manifiesta de manera formal su aceptación y conformidad con los resultados y entregables del proyecto.', 'ER4V9RV04','ER4V9RV00'),
+('ASSETEC ha realizado y culminado a satisfacción del COES-SINAC las actividades relacionadas a la Fase 3 – Implantación y Cierre del Proyecto de aplicativo de intervenciones, de conformidad con los miembros del Comité y en cumplimiento de los entregables requeridos en los Términos de referencia.','CE4V54V01','CE4V54V00'),
+('En la fecha el sistema se encuentra en producción en los servidores de la Intranet/Extranet del COES-SINAC.','CE4V54V02','CE4V54V00'),
+('Por el presente documento ASSETEC ha realizado y culminado a satisfacción del COES-SINAC las actividades establecidos en el proyecto del Aplicatico de Intervenciones','CE4V54V03','CE4V54V00'),
+('Por este mismo documento el COES-SINAC manifiesta de manera formal su aceptación y conformidad con los resultados y entregables del proyecto.','CE4V54V04','CE4V54V00'),sdc
+('ASSETEC ha realizado y culminado a satisfacción del COES-SINAC las actividades relacionadas a la Fase 3 – Implantación y Cierre del Proyecto de aplicativo de intervenciones, de conformidad con los miembros del Comité y en cumplimiento de los entregables requeridos en los Términos de referencia.','SC45DV101','SC45DV100'),
+('En la fecha el sistema se encuentra en producción en los servidores de la Intranet/Extranet del COES-SINAC.','SC45DV102','SC45DV100'),
+('Por el presente documento ASSETEC ha realizado y culminado a satisfacción del COES-SINAC las actividades establecidos en el proyecto del Aplicatico de Intervenciones','SC45DV103','SC45DV100'),
+('Por este mismo documento el COES-SINAC manifiesta de manera formal su aceptación y conformidad con los resultados y entregables del proyecto.','SC45DV104','SC45DV100'),
+('ASSETEC ha realizado y culminado a satisfacción del Nexo Inmobiliario SAC las actividades relacionadas a la Fase 3 – Implantación y Cierre del Proyecto de paltarumi sac-web app, de conformidad con los miembros del Comité y en cumplimiento de los entregables requeridos en los Términos de referencia.','SC45CW501','SC45CW500'),
+('Por el presente documento ASSETEC ha realizado y culminado a satisfacción del Nexo Inmobiliario SAC las actividades establecidos en el proyecto del Paltarumi SAC-Web app','SC45CW502','SC45CW500'),
+('Por este mismo documento el Nexo Inmobiliario SAC manifiesta de manera formal su aceptación y conformidad con los resultados y entregables del proyecto.','SC45CW503','SC45CW500');
+
+
+CREATE TABLE ACTA_FIRMA
+(
+  FECHA DATE NOT NULL,
+  COD_ACTA VARCHAR(9) NOT NULL,
+  COD_FIRMA VARCHAR(9) NOT NULL,
+  PRIMARY KEY (COD_ACTA, COD_FIRMA),
+  FOREIGN KEY (COD_ACTA) REFERENCES ACTA(COD_ACTA),
+  FOREIGN KEY (COD_FIRMA) REFERENCES FIRMA(COD_FIRMA)
+);
+(2020-08-16, 'ER4V9RV00', 'ACEPTADA'), 
+(2019-12-20,'CE4V54V00','RECHAZADA'), 
+(2019-12-22,'SC45DV100','ACEPTADA'),
+(2020-04-05, 'SC45CW500','ACEPTADA');
+
+INSERT INTO ACTA_FIRMA VALUES 
+(2020-08-16, 'ER4V9RV00', '4vjh5v5VK'), 
+(2020-08-16, 'ER4V9RV00', '7WEH5jv5c'), 
+(2020-08-16, 'ER4V9RV00', '88J7vhdc9'),
+(2020-08-16, 'ER4V9RV00', 'c75svsd7D'),
+(2019-12-21,'CE4V54V00','4vjh5v5VK'),
+(2019-12-21,'CE4V54V00','7WEH5jv5c'),
+(2019-12-21,'CE4V54V00','88J7vhdc9'),
+(2019-12-21,'CE4V54V00','SC45CI156'),
+(2019-12-22,'SC45DV100','4vjh5v5VK'),
+(2019-12-23,'SC45DV100','7WEH5jv5c'),
+(2019-12-23,'SC45DV100','88J7vhdc9'),
+(2019-12-27,'SC45DV100','FXkcs1cd7'),
+(2020-04-05, 'SC45CW500','4vjh5v5VK'),
+(2020-04-06, 'SC45CW500','7WEH5jv5c'),
+(2020-04-05, 'SC45CW500','88J7vhdc9'),
+(2020-04-05, 'SC45CW500','hdc4X4HB5');
