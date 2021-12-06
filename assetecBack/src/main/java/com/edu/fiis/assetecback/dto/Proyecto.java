@@ -11,5 +11,5 @@ public class Proyecto {
     private String fechaFinEstimada;
     private String fechaInicioReal;
     private String fechaInicioEstimada;
-    private Presupuesto presupuesto;
+    private String codigoPresupuesto;
 }
