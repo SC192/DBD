@@ -1,6 +1,9 @@
 package com.edu.fiis.assetecback.dao;
 
 import com.edu.fiis.assetecback.dto.*;
+import com.edu.fiis.assetecback.dto.request.RegistroAsistencia;
+import com.edu.fiis.assetecback.dto.request.TrabajadorActividad;
+import com.edu.fiis.assetecback.dto.responses.ResumenTrabajador;
 import com.edu.fiis.assetecback.dto.responses.Rol;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -204,7 +207,7 @@ public class AssetecDaoImpl implements AssetecDao{
         return objetivos;
     }
 
-    public List<Rol> obtenerListaRoles(Proyecto proyecto) {
+    public List<Rol> obtenerListaRolesProyecto(Proyecto proyecto) {
         List<Rol> roles = new ArrayList<>();
         String sql = "SELECT\n" +
                 "PTV.NOMBRE_PERFIL,\n" +
@@ -279,5 +282,157 @@ public class AssetecDaoImpl implements AssetecDao{
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public List<Rol> obtenerListaRolesActividad(Actividad actividad) {
+        List<Rol> roles = new ArrayList<>();
+        String sql = "SELECT\n" +
+                "PER.NOMBRE AS ROL,\n" +
+                "COUNT(DISTINCT TPA.DNI) AS CANTIDAD,\n" +
+                "SUM(TPA.CANTI_HORAS) AS HORAS_R,\n" +
+                "MAX(convertir_monto(PER.SUELDO, M.NOMBRE)) AS COSTO_HORA\n" +
+                "FROM TRABAJADOR_PERFIL_ACTIVIDAD TPA\n" +
+                "INNER JOIN TRABAJADOR_PERFIL TP\n" +
+                "ON TPA.DNI = TP.DNI AND TPA.COD_PERFIL = TP.COD_PERFIL\n" +
+                "INNER JOIN PERFIL PER\n" +
+                "ON PER.COD_PERFIL = TP.COD_PERFIL\n" +
+                "INNER JOIN MONEDA M\n" +
+                "ON PER.COD_MONEDA = M.COD_MONEDA\n" +
+                "WHERE COD_ACTIVIDAD = <1>\n" +
+                "GROUP BY PER.NOMBRE";
+        try {
+            Connection con = jdbcTemplate.getDataSource().getConnection();
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setString(1,actividad.getCodigoActividad());
+
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()) {
+                Rol rol = new Rol();
+                rol.setNombrePerfil(rs.getString("ROL"));
+                rol.setCantidad(rs.getInt("CANTIDAD"));
+                rol.setTotalHoras(rs.getDouble("HORAS_R"));
+                rol.setCostoHora(rs.getDouble("COSTO_HORA"));
+                roles.add(rol);
+            }
+
+            rs.close();
+            ps.close();
+            con.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return roles;
+    }
+
+    public RegistroAsistencia obtenerTrabajadorActividad(TrabajadorActividad ta) {
+        RegistroAsistencia ra = new RegistroAsistencia();
+        String sql = "SELECT\n" +
+                "DISTINCT NOMBRE_PERFIL AS ROL,\n" +
+                "convertir_monto(SUELDO_PERFIL,NOMBRE_MONEDA) AS COSTO_HORA,\n" +
+                "DNI_TRAB AS DNI,\n" +
+                "PRIMER_NOMBRE_TRAB AS PRIMER_NOMBRE,\n" +
+                "APELLIDO_M_TRAB AS APELLIDO_M,\n" +
+                "APELLIDO_P_TRAB AS APELLIDO_P\n" +
+                "FROM PROYECTO_TRABAJADOR_V TPV\n" +
+                "INNER JOIN TRABAJADOR_PERFIL_ACTIVIDAD TPA\n" +
+                "ON TPV.DNI_TRAB = TPA.DNI\n" +
+                "WHERE TPA.DNI = ?\n" +
+                "AND TPA.COD_ACTIVIDAD = ?\n" +
+                "AND TPV.COD_PROYECTO = ?";
+        try {
+            Connection con = jdbcTemplate.getDataSource().getConnection();
+            PreparedStatement ps = con.prepareStatement(sql);
+
+            ps.setString(1, ta.getDni());
+            ps.setString(2, ta.getCodigoActividad());
+            ps.setString(3, ta.getCodigoProyecto());
+
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()) {
+                ra.setNombreRol(rs.getString("ROL"));
+                ra.setCostoHora(rs.getDouble("COSTO_HORA"));
+                ra.setDni(rs.getString("DNI"));
+                ra.setNombre(rs.getString("PRIMER_NOMBRE"));
+                ra.setApellidoM(rs.getString("APELLIDO_M"));
+                ra.setApellidoP(rs.getString("APELLIDO_P"));
+            }
+
+            rs.close();
+            ps.close();
+            con.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return ra;
+    }
+
+    public void registrarAsistenciaTrabajador(RegistroAsistencia ra) {
+        String sql = "INSERT INTO\n" +
+                "TRABAJADOR_PERFIL_ACTIVIDAD(CODIGO,FECHA,CANT_HORAS,COD_ACTIVIDAD,DNI,\n" +
+                "COD_PERFIL)\n" +
+                "VALUES (gen_cod('TRABAJADOR_PERFIL_ACTIVIDAD'),TO_DATE(?,‘DD/MM/YYYY’), \n" +
+                "?, ?, ?,(SELECT COD_PERFIL FROM PERFIL WHERE NOMBRE = ?))";
+
+        try {
+            Connection con = jdbcTemplate.getDataSource().getConnection();
+            PreparedStatement ps = con.prepareStatement(sql);
+
+            ps.setString(1, ra.getFecha());
+            ps.setDouble(2, ra.getHorasTrabajadas());
+            ps.setString(3, ra.getCodigoActividad());
+            ps.setString(4, ra.getDni());
+            ps.setString(5, ra.getNombreRol());
+
+            ps.executeUpdate();
+            ps.close();
+            con.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public List<ResumenTrabajador> obtenerResumenTrabajadorActividad(Actividad actividad) {
+        List<ResumenTrabajador> resumenTrabajador = new ArrayList<>();
+        String sql = "SELECT\n" +
+                "PER.NOMBRE AS ROL,\n" +
+                "MAX(convertir_monto(PER.SUELDO, M.NOMBRE)) AS COSTO_HORA,\n" +
+                "PRS.DNI,\n" +
+                "MAX(PRS.PRIMER_NOMBRE) AS NOMBRE,\n" +
+                "MAX(PRS.APELLIDO_P) AS APELLIDO_P,\n" +
+                "SUM(TPA.CANT_HORAS) AS HORAS_T\n" +
+                "FROM TRABAJADOR_PERFIL_ACTIVIDAD TPA\n" +
+                "INNER JOIN TRABAJADOR_PERFIL TP\n" +
+                "ON TPA.DNI = TP.DNI AND TPA.COD_PERFIL = TP.COD_PERFIL\n" +
+                "INNER JOIN PERSONA PRS\n" +
+                "ON TP.DNI = PRS.DNI\n" +
+                "INNER JOIN PERFIL PER\n" +
+                "ON PER.COD_PERFIL = TP.COD_PERFIL\n" +
+                "INNER JOIN MONEDA M\n" +
+                "ON PER.COD_MONEDA = M.COD_MONEDA\n" +
+                "WHERE COD_ACTIVIDAD = ?\n" +
+                "GROUP BY PER.NOMBRE, PRS.DNI";
+
+        try {
+            Connection con = jdbcTemplate.getDataSource().getConnection();
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setString(1, actividad.getCodigoActividad());
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                ResumenTrabajador rt = new ResumenTrabajador();
+                rt.setNombreRol(rs.getString("ROL"));
+                rt.setCostoHora(rs.getDouble("COSTO_HORA"));
+                rt.setDni(rs.getString("DNI"));
+                rt.setNombre(rs.getString("NOMBRE"));
+                rt.setApellidoP(rs.getString("APELLIDO_P"));
+                rt.setHorasTotales(rs.getDouble("HORAS_T"));
+                resumenTrabajador.add(rt);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return resumenTrabajador;
     }
 }
