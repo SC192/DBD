@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class Solicitud {
-    private String codigoSolicitud;
+    private Integer codigoSolicitud;
     private String fechaSolicitud;
     private String fechaModificacion;
     private String estado;

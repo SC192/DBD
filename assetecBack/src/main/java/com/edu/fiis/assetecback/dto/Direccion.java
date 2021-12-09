@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class Direccion {
-    private String codigoDireccion;
+    private Integer codigoDireccion;
     private String codigoPostal;
     private String nombre;
     private String unidad;

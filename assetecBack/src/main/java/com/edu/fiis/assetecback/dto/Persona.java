@@ -10,5 +10,5 @@ public class Persona {
     private String apellidoPaterno;
     private String contrasenia;
     private String firma;
-    private String codigoDireccion;
+    private Integer codigoDireccion;
 }

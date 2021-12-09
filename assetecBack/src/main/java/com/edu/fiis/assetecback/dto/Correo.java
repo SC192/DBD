@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class Correo {
-    private String codigoCorreo;
+    private Integer codigoCorreo;
     private String correo;
     private String dni;
 }
