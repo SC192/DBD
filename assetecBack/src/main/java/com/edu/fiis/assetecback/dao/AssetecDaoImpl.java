@@ -1,7 +1,7 @@
 package com.edu.fiis.assetecback.dao;
 
 import com.edu.fiis.assetecback.dto.*;
-import com.edu.fiis.assetecback.dto.request.RegistroAsistencia;
+import com.edu.fiis.assetecback.dto.request.Asistencia;
 import com.edu.fiis.assetecback.dto.request.TrabajadorActividad;
 import com.edu.fiis.assetecback.dto.responses.ResumenTrabajador;
 import com.edu.fiis.assetecback.dto.responses.Rol;
@@ -324,8 +324,8 @@ public class AssetecDaoImpl implements AssetecDao{
         return roles;
     }
 
-    public RegistroAsistencia obtenerTrabajadorActividad(TrabajadorActividad ta) {
-        RegistroAsistencia ra = new RegistroAsistencia();
+    public Asistencia obtenerTrabajadorActividad(TrabajadorActividad ta) {
+        Asistencia ra = new Asistencia();
         String sql = "SELECT\n" +
                 "DISTINCT NOMBRE_PERFIL AS ROL,\n" +
                 "convertir_monto(SUELDO_PERFIL,NOMBRE_MONEDA) AS COSTO_HORA,\n" +
@@ -367,12 +367,10 @@ public class AssetecDaoImpl implements AssetecDao{
         return ra;
     }
 
-    public void registrarAsistenciaTrabajador(RegistroAsistencia ra) {
+    public void registrarAsistenciaTrabajador(Asistencia ra) {
         String sql = "INSERT INTO\n" +
-                "TRABAJADOR_PERFIL_ACTIVIDAD(CODIGO,FECHA,CANT_HORAS,COD_ACTIVIDAD,DNI,\n" +
-                "COD_PERFIL)\n" +
-                "VALUES (gen_cod('TRABAJADOR_PERFIL_ACTIVIDAD'),TO_DATE(?,‘DD/MM/YYYY’), \n" +
-                "?, ?, ?,(SELECT COD_PERFIL FROM PERFIL WHERE NOMBRE = ?))";
+                "TRABAJADOR_PERFIL_ACTIVIDAD(FECHA,CANT_HORAS,COD_ACTIVIDAD,DNI,COD_PERFIL)\n" +
+                "VALUES (TO_DATE(?,‘DD/MM/YYYY’), ?, ?, ?,(SELECT COD_PERFIL FROM PERFIL WHERE NOMBRE = ?))";
 
         try {
             Connection con = jdbcTemplate.getDataSource().getConnection();
@@ -434,5 +432,42 @@ public class AssetecDaoImpl implements AssetecDao{
             e.printStackTrace();
         }
         return resumenTrabajador;
+    }
+
+    public List<Asistencia> traerDatosTrabajadorActividad(Asistencia asistencia) {
+        List<Asistencia> asistencias = new ArrayList<>();
+        String sql = "SELECT\n" +
+                "CODIGO,\n" +
+                "FECHA,\n" +
+                "CANTI_HORAS,\n" +
+                "FROM TRABAJADOR_PERFIL_ACTIVIDAD\n" +
+                "WHERE COD_ACTIVIDAD = ? \n" +
+                "AND DNI = ? \n" +
+                "AND COD_PERFIL = (SELECT COD_PERFIL FROM PERFIL WHERE NOMBRE = ?)";
+        try {
+            Connection con = jdbcTemplate.getDataSource().getConnection();
+            PreparedStatement ps = con.prepareStatement(sql);
+
+            ps.setString(1, asistencia.getCodigoActividad());
+            ps.setString(2, asistencia.getDni());
+            ps.setString(3, asistencia.getNombreRol());
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()){
+                Asistencia a = asistencia;
+                a.setCodigo(rs.getInt("CODIGO"));
+                a.setFecha(rs.getString("FECHA"));
+                a.setHorasTrabajadas(rs.getDouble("CANTI_HORAS"));
+                asistencias.add(a);
+            }
+
+            rs.close();
+            ps.close();
+            con.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return asistencias;
     }
 }
