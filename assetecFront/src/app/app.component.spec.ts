@@ -1,6 +1,14 @@
 import { TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
+import { HomeComponent } from './home/home.component';
+import {ActaComponent} from './acta/acta.component';
+import {ProyectoComponent} from './proyecto/proyecto.component';
+import {SigninComponent} from './signin/signin.component';
+import {SignupComponent} from './signup/signup.component';
+import {BuscadorProyectoComponent} from './buscadorProyecto/buscador-proyecto.component';
+import {AsistenciaComponent} from './asistencia/asistencia.component';
+import {ActividadComponent} from './actividad/actividad.component';
 
 describe('AppComponent', () => {
   beforeEach(async () => {
@@ -9,7 +17,15 @@ describe('AppComponent', () => {
         RouterTestingModule
       ],
       declarations: [
-        AppComponent
+        AppComponent,
+        HomeComponent,
+        ActaComponent,
+        ProyectoComponent,
+        SigninComponent,
+        SignupComponent,
+        BuscadorProyectoComponent,
+        AsistenciaComponent,
+        ActividadComponent
       ],
     }).compileComponents();
   });
