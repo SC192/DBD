@@ -6,8 +6,9 @@ import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class RegistroAsistencia extends ResumenTrabajador {
+public class Asistencia extends ResumenTrabajador {
     private String codigoActividad;
     private Double horasTrabajadas;
     private String fecha;
+    private Integer codigo;
 }
