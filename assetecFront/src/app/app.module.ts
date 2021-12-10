@@ -13,6 +13,9 @@ import { AsistenciaComponent } from './asistencia/asistencia.component';
 import { ProyectoComponent } from './proyecto/proyecto.component';
 import { ActividadComponent } from './actividad/actividad.component';
 import { ActaComponent } from './acta/acta.component';
+import { SolicitudContactoComponent } from './solicitud-contacto/solicitud-contacto.component';
+import { SolicitudTrabajadorComponent } from './solicitud-trabajador/solicitud-trabajador.component';
+import { PerfilComponent } from './perfil/perfil.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +27,10 @@ import { ActaComponent } from './acta/acta.component';
     AsistenciaComponent,
     ProyectoComponent,
     ActividadComponent,
-    ActaComponent
+    ActaComponent,
+    SolicitudContactoComponent,
+    SolicitudTrabajadorComponent,
+    PerfilComponent
   ],
   imports: [
     BrowserModule,
@@ -35,4 +41,6 @@ import { ActaComponent } from './acta/acta.component';
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+
+}

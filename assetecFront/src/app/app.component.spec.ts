@@ -9,6 +9,9 @@ import {SignupComponent} from './signup/signup.component';
 import {BuscadorProyectoComponent} from './buscadorProyecto/buscador-proyecto.component';
 import {AsistenciaComponent} from './asistencia/asistencia.component';
 import {ActividadComponent} from './actividad/actividad.component';
+import {PerfilComponent} from "./perfil/perfil.component";
+import {SolicitudContactoComponent} from "./solicitud-contacto/solicitud-contacto.component";
+import {SolicitudTrabajadorComponent} from "./solicitud-trabajador/solicitud-trabajador.component";
 
 describe('AppComponent', () => {
   beforeEach(async () => {
@@ -25,7 +28,10 @@ describe('AppComponent', () => {
         SignupComponent,
         BuscadorProyectoComponent,
         AsistenciaComponent,
-        ActividadComponent
+        ActividadComponent,
+        PerfilComponent,
+        SolicitudContactoComponent,
+        SolicitudTrabajadorComponent
       ],
     }).compileComponents();
   });
