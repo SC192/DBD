@@ -1,8 +1,7 @@
 package com.edu.fiis.assetecback.dao;
 
 import com.edu.fiis.assetecback.dto.*;
-import com.edu.fiis.assetecback.dto.request.Asistencia;
-import com.edu.fiis.assetecback.dto.request.TrabajadorActividad;
+import com.edu.fiis.assetecback.dto.request.*;
 import com.edu.fiis.assetecback.dto.responses.ResumenTrabajador;
 import com.edu.fiis.assetecback.dto.responses.Rol;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -369,8 +368,8 @@ public class AssetecDaoImpl implements AssetecDao{
 
     public void registrarAsistenciaTrabajador(Asistencia ra) {
         String sql = "INSERT INTO\n" +
-                "TRABAJADOR_PERFIL_ACTIVIDAD(FECHA,CANT_HORAS,COD_ACTIVIDAD,DNI,COD_PERFIL)\n" +
-                "VALUES (TO_DATE(?,‘DD/MM/YYYY’), ?, ?, ?,(SELECT COD_PERFIL FROM PERFIL WHERE NOMBRE = ?))";
+                "TRABAJADOR_PERFIL_ACTIVIDAD(CODIGO, FECHA,CANT_HORAS,COD_ACTIVIDAD,DNI,COD_PERFIL)\n" +
+                "VALUES (gen_cod('TRABAJADOR_PERFIL_ACTIVIDAD'),?, ?, ?, ?,(SELECT COD_PERFIL FROM PERFIL WHERE NOMBRE = ?))";
 
         try {
             Connection con = jdbcTemplate.getDataSource().getConnection();
@@ -454,7 +453,13 @@ public class AssetecDaoImpl implements AssetecDao{
 
             ResultSet rs = ps.executeQuery();
             while (rs.next()){
-                Asistencia a = asistencia;
+                Asistencia a = new Asistencia();
+                a.setNombreRol(asistencia.getNombreRol());
+                a.setCostoHora(asistencia.getCostoHora());
+                a.setDni(asistencia.getDni());
+                a.setNombre(asistencia.getNombre());
+                a.setApellidoP(asistencia.getApellidoP());
+                a.setApellidoM(asistencia.getApellidoM());
                 a.setCodigo(rs.getInt("CODIGO"));
                 a.setFecha(rs.getString("FECHA"));
                 a.setHorasTrabajadas(rs.getDouble("CANTI_HORAS"));
@@ -469,5 +474,111 @@ public class AssetecDaoImpl implements AssetecDao{
         }
 
         return asistencias;
+    }
+
+    public void eliminarAsistenciaTrabajador(Asistencia asistencia){
+        String sql = "DELETE FROM TRABAJADOR_PERFIL_ACTIVIDAD\n" +
+                "WHERE CODIGO = ?\n";
+        try {
+            Connection con = jdbcTemplate.getDataSource().getConnection();
+            PreparedStatement ps = con.prepareStatement(sql);
+
+            ps.setInt(1, asistencia.getCodigo());
+
+            ps.executeUpdate();
+            ps.close();
+            con.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void registrarPago(RegistroPago registroPago) {
+        String sql = "CALL registrar_remu(?,?,?)";
+        try {
+            Connection con = jdbcTemplate.getDataSource().getConnection();
+            PreparedStatement ps = con.prepareStatement(sql);
+
+            ps.setString(1, registroPago.getCodigoActividad());
+            ps.setDouble(2, registroPago.getMaximaRemumeracion());
+            ps.setString(3, registroPago.getNombreMoneda());
+
+            ps.executeUpdate();
+            ps.close();
+            con.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void registrarComprobantePago(RegistroComprobante registroComprobante) {
+        String sql = "INSERT INTO COMPROBANTE_PAGO(NUMERO, IMPORTE,PROVEEDOR, FECHA,\n" +
+                "DESCRIPCION, COD_MONEDA, COD_TIPO_COMP, COD_TIPO_GASTO, COD_ACTIVIDAD)\n" +
+                "VALUES\n" +
+                "(?,\n" +
+                "?,\n" +
+                "?,\n" +
+                "?,\n" +
+                "?,\n" +
+                "(SELECT COD_MONEDA FROM MONEDA WHERE NOMBRE = UPPER(?)),\n" +
+                "(SELECT COD_TIPO FROM TIPO_COMPROBANTE WHERE TIPO = UPPER(?)),\n" +
+                "(SELECT COD_TIPO FROM TIPO_GASTO WHERE TIPO = UPPER(?)),\n" +
+                "?)";
+        try {
+            Connection con = jdbcTemplate.getDataSource().getConnection();
+            PreparedStatement ps = con.prepareStatement(sql);
+
+            ps.setString(1, registroComprobante.getNumero());
+            ps.setDouble(2, registroComprobante.getImporte());
+            ps.setString(3, registroComprobante.getProveedor());
+            ps.setString(4, registroComprobante.getFecha());
+            ps.setString(5, registroComprobante.getDescripcion());
+            ps.setString(6, registroComprobante.getNombreMoneda());
+            ps.setString(7, registroComprobante.getNombreTipoComprobante());
+            ps.setString(8, registroComprobante.getNombreTipoGasto());
+            ps.setString(9, registroComprobante.getCodigoActividad());
+
+            ps.executeUpdate();
+            ps.close();
+            con.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void generarCierre(Proyecto proyecto) {
+        String sql = "UPDATE PROYECTO\n" +
+                "SET ESTADO = 'EN ESPERA'\n" +
+                "WHERE COD_PROYECTO = <1>";
+        try {
+            Connection con = jdbcTemplate.getDataSource().getConnection();
+            PreparedStatement ps = con.prepareStatement(sql);
+
+            ps.setString(1, proyecto.getCodigoProyecto());
+
+            ps.executeUpdate();
+            ps.close();
+            con.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void crearActa(RegistroActa registroActa) {
+        String sql = "CALL crear_acta(<0>, <2>)";
+        try {
+            Connection con = jdbcTemplate.getDataSource().getConnection();
+            PreparedStatement ps = con.prepareStatement(sql);
+
+            Array sqlArray = con.createArrayOf("VARCHAR(600)", registroActa.getAcuerdos().toArray(new String[0]));
+            ps.setArray(1, sqlArray);
+            ps.setString(2, registroActa.getCodigoProyecto());
+
+            ps.executeUpdate();
+            ps.close();
+            con.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
