@@ -8,9 +8,9 @@ import {BuscadorProyectoComponent} from './buscadorProyecto/buscador-proyecto.co
 import {SignupComponent} from './signup/signup.component';
 import {SigninComponent} from './signin/signin.component';
 import {ProyectoComponent} from './proyecto/proyecto.component';
-import {SolicitudContactoComponent} from "./solicitud-contacto/solicitud-contacto.component";
-import {SolicitudTrabajadorComponent} from "./solicitud-trabajador/solicitud-trabajador.component";
-import {PerfilComponent} from "./perfil/perfil.component";
+import {SolicitudContactoComponent} from './solicitud-contacto/solicitud-contacto.component';
+import {SolicitudTrabajadorComponent} from './solicitud-trabajador/solicitud-trabajador.component';
+import {PerfilComponent} from './perfil/perfil.component';
 
 const routes: Routes = [
   {path: '', component: SigninComponent},
@@ -18,7 +18,7 @@ const routes: Routes = [
   {path: 'asistencia', component: AsistenciaComponent},
   {path: 'actividad', component: ActividadComponent},
   {path: 'acta', component: ActaComponent},
-  {path: 'buscadorProyecto', component: BuscadorProyectoComponent},
+  {path: 'buscador', component: BuscadorProyectoComponent},
   {path: 'signup', component: SignupComponent},
   {path: 'proyecto', component: ProyectoComponent},
   {path: 'solicitudC', component: SolicitudContactoComponent},

@@ -30,7 +30,7 @@ import { PerfilComponent } from './perfil/perfil.component';
     ActaComponent,
     SolicitudContactoComponent,
     SolicitudTrabajadorComponent,
-    PerfilComponent
+    PerfilComponent,
   ],
   imports: [
     BrowserModule,
