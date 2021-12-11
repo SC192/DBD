@@ -11,6 +11,9 @@ import {ProyectoComponent} from './proyecto/proyecto.component';
 import {SolicitudContactoComponent} from './solicitud-contacto/solicitud-contacto.component';
 import {SolicitudTrabajadorComponent} from './solicitud-trabajador/solicitud-trabajador.component';
 import {PerfilComponent} from './perfil/perfil.component';
+import {ResultadosComponent} from './resultados/resultados.component';
+import {GastoComponent} from './gasto/gasto.component';
+import {ComprobanteComponent} from './comprobante/comprobante.component';
 
 const routes: Routes = [
   {path: '', component: SigninComponent},
@@ -24,6 +27,9 @@ const routes: Routes = [
   {path: 'solicitudC', component: SolicitudContactoComponent},
   {path: 'solicitudT', component: SolicitudTrabajadorComponent},
   {path: 'perfil', component: PerfilComponent},
+  {path: 'resultados', component: ResultadosComponent},
+  {path: 'gasto', component: GastoComponent},
+  {path: 'comprobante', component: ComprobanteComponent},
 ];
 
 @NgModule({

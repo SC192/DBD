@@ -12,6 +12,9 @@ import {ActividadComponent} from './actividad/actividad.component';
 import {PerfilComponent} from './perfil/perfil.component';
 import {SolicitudContactoComponent} from './solicitud-contacto/solicitud-contacto.component';
 import {SolicitudTrabajadorComponent} from './solicitud-trabajador/solicitud-trabajador.component';
+import {ResultadosComponent} from './resultados/resultados.component';
+import {GastoComponent} from './gasto/gasto.component';
+import {ComprobanteComponent} from './comprobante/comprobante.component';
 
 describe('AppComponent', () => {
   beforeEach(async () => {
@@ -31,7 +34,10 @@ describe('AppComponent', () => {
         ActividadComponent,
         PerfilComponent,
         SolicitudContactoComponent,
-        SolicitudTrabajadorComponent
+        SolicitudTrabajadorComponent,
+        ResultadosComponent,
+        GastoComponent,
+        ComprobanteComponent,
       ],
     }).compileComponents();
   });

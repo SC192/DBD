@@ -16,6 +16,9 @@ import { ActaComponent } from './acta/acta.component';
 import { SolicitudContactoComponent } from './solicitud-contacto/solicitud-contacto.component';
 import { SolicitudTrabajadorComponent } from './solicitud-trabajador/solicitud-trabajador.component';
 import { PerfilComponent } from './perfil/perfil.component';
+import { ResultadosComponent } from './resultados/resultados.component';
+import { ComprobanteComponent } from './comprobante/comprobante.component';
+import { GastoComponent } from './gasto/gasto.component';
 
 @NgModule({
   declarations: [
@@ -31,6 +34,9 @@ import { PerfilComponent } from './perfil/perfil.component';
     SolicitudContactoComponent,
     SolicitudTrabajadorComponent,
     PerfilComponent,
+    ResultadosComponent,
+    ComprobanteComponent,
+    GastoComponent,
   ],
   imports: [
     BrowserModule,
