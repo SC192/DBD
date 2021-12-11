@@ -380,6 +380,7 @@ public class AssetecDaoImpl implements AssetecDao{
             ps.setString(5, ra.getNombreRol());
 
             ps.executeUpdate();
+            con.commit();
             ps.close();
             con.close();
         } catch (SQLException e) {
@@ -484,6 +485,7 @@ public class AssetecDaoImpl implements AssetecDao{
             ps.setInt(1, asistencia.getCodigo());
 
             ps.executeUpdate();
+            con.commit();
             ps.close();
             con.close();
         } catch (SQLException e) {
@@ -502,6 +504,7 @@ public class AssetecDaoImpl implements AssetecDao{
             ps.setString(3, registroPago.getNombreMoneda());
 
             ps.executeUpdate();
+            con.commit();
             ps.close();
             con.close();
         } catch (SQLException e) {
@@ -537,6 +540,7 @@ public class AssetecDaoImpl implements AssetecDao{
             ps.setString(9, registroComprobante.getCodigoActividad());
 
             ps.executeUpdate();
+            con.commit();
             ps.close();
             con.close();
         } catch (SQLException e) {
@@ -555,6 +559,7 @@ public class AssetecDaoImpl implements AssetecDao{
             ps.setString(1, proyecto.getCodigoProyecto());
 
             ps.executeUpdate();
+            con.commit();
             ps.close();
             con.close();
         } catch (SQLException e) {
