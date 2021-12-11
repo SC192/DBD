@@ -10,5 +10,5 @@ public class Asistencia extends ResumenTrabajador {
     private String codigoActividad;
     private Double horasTrabajadas;
     private String fecha;
-    private Integer codigo;
+    private String codigo;
 }

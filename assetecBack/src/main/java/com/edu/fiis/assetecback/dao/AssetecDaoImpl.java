@@ -142,11 +142,9 @@ public class AssetecDaoImpl implements AssetecDao{
             rs.close();
             ps.close();
             con.close();
-
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-
         return actividades;
     }
 
@@ -171,7 +169,6 @@ public class AssetecDaoImpl implements AssetecDao{
             rs.close();
             ps.close();
             con.close();
-
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -199,7 +196,6 @@ public class AssetecDaoImpl implements AssetecDao{
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return objetivos;
     }
 
@@ -231,11 +227,12 @@ public class AssetecDaoImpl implements AssetecDao{
                 rol.setCostoHora(rs.getDouble("COSTO_HORA"));
                 roles.add(rol);
             }
-
+            rs.close();
+            ps.close();
+            con.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return roles;
     }
 
@@ -255,7 +252,9 @@ public class AssetecDaoImpl implements AssetecDao{
                 o.setObjetivo(rs.getString("OBJETIVO"));
                 oa.add(o);
             }
-
+            rs.close();
+            ps.close();
+            con.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -265,7 +264,7 @@ public class AssetecDaoImpl implements AssetecDao{
     public void completarActividad(Actividad actividad) {
         String sql = "UPDATE ACTIVIDAD\n" +
                 "SET FECHA_FIN_REAL = CURRENT_DATE\n" +
-                "WHERE COD_ACTIVIDAD = ?\n";
+                "WHERE COD_ACTIVIDAD = ?";
         try {
             Connection con = jdbcTemplate.getDataSource().getConnection();
             PreparedStatement ps = con.prepareStatement(sql);
@@ -295,7 +294,7 @@ public class AssetecDaoImpl implements AssetecDao{
                 "ON PER.COD_PERFIL = TP.COD_PERFIL\n" +
                 "INNER JOIN MONEDA M\n" +
                 "ON PER.COD_MONEDA = M.COD_MONEDA\n" +
-                "WHERE COD_ACTIVIDAD = <1>\n" +
+                "WHERE COD_ACTIVIDAD = ? \n" +
                 "GROUP BY PER.NOMBRE";
         try {
             Connection con = jdbcTemplate.getDataSource().getConnection();
@@ -360,14 +359,13 @@ public class AssetecDaoImpl implements AssetecDao{
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return ra;
     }
 
     public void registrarAsistenciaTrabajador(Asistencia ra) {
         String sql = "INSERT INTO\n" +
-                "TRABAJADOR_PERFIL_ACTIVIDAD(CODIGO, FECHA,CANT_HORAS,COD_ACTIVIDAD,DNI,COD_PERFIL)\n" +
-                "VALUES (gen_cod('TRABAJADOR_PERFIL_ACTIVIDAD'),?, ?, ?, ?,(SELECT COD_PERFIL FROM PERFIL WHERE NOMBRE = ?))";
+        "TRABAJADOR_PERFIL_ACTIVIDAD(CODIGO, FECHA,CANTI_HORAS,COD_ACTIVIDAD,DNI,COD_PERFIL)\n" +
+        "VALUES (gen_cod('TRABAJADOR_PERFIL_ACTIVIDAD'),TO_DATE(?,'DD/MM/YYYY'), ?, ?, ?,(SELECT COD_PERFIL FROM PERFIL WHERE NOMBRE = ?))";
 
         try {
             Connection con = jdbcTemplate.getDataSource().getConnection();
@@ -396,7 +394,7 @@ public class AssetecDaoImpl implements AssetecDao{
                 "PRS.DNI,\n" +
                 "MAX(PRS.PRIMER_NOMBRE) AS NOMBRE,\n" +
                 "MAX(PRS.APELLIDO_P) AS APELLIDO_P,\n" +
-                "SUM(TPA.CANT_HORAS) AS HORAS_T\n" +
+                "SUM(TPA.CANTI_HORAS) AS HORAS_T\n" +
                 "FROM TRABAJADOR_PERFIL_ACTIVIDAD TPA\n" +
                 "INNER JOIN TRABAJADOR_PERFIL TP\n" +
                 "ON TPA.DNI = TP.DNI AND TPA.COD_PERFIL = TP.COD_PERFIL\n" +
@@ -426,6 +424,9 @@ public class AssetecDaoImpl implements AssetecDao{
                 resumenTrabajador.add(rt);
             }
 
+            rs.close();
+            ps.close();
+            con.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -437,7 +438,7 @@ public class AssetecDaoImpl implements AssetecDao{
         String sql = "SELECT\n" +
                 "CODIGO,\n" +
                 "FECHA,\n" +
-                "CANTI_HORAS,\n" +
+                "CANTI_HORAS \n" +
                 "FROM TRABAJADOR_PERFIL_ACTIVIDAD\n" +
                 "WHERE COD_ACTIVIDAD = ? \n" +
                 "AND DNI = ? \n" +
@@ -459,7 +460,7 @@ public class AssetecDaoImpl implements AssetecDao{
                 a.setNombre(asistencia.getNombre());
                 a.setApellidoP(asistencia.getApellidoP());
                 a.setApellidoM(asistencia.getApellidoM());
-                a.setCodigo(rs.getInt("CODIGO"));
+                a.setCodigo(rs.getString("CODIGO"));
                 a.setFecha(rs.getString("FECHA"));
                 a.setHorasTrabajadas(rs.getDouble("CANTI_HORAS"));
                 asistencias.add(a);
@@ -471,7 +472,6 @@ public class AssetecDaoImpl implements AssetecDao{
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return asistencias;
     }
 
@@ -482,7 +482,7 @@ public class AssetecDaoImpl implements AssetecDao{
             Connection con = jdbcTemplate.getDataSource().getConnection();
             PreparedStatement ps = con.prepareStatement(sql);
 
-            ps.setInt(1, asistencia.getCodigo());
+            ps.setString(1, asistencia.getCodigo());
 
             ps.executeUpdate();
             con.commit();
@@ -494,18 +494,18 @@ public class AssetecDaoImpl implements AssetecDao{
     }
 
     public void registrarPago(RegistroPago registroPago) {
-        String sql = "CALL registrar_remu(?,?,?)";
+        String sql = "CALL registrar_remu(?,CAST(? AS NUMERIC(6,2)),?)";
         try {
             Connection con = jdbcTemplate.getDataSource().getConnection();
-            PreparedStatement ps = con.prepareStatement(sql);
+            CallableStatement proc = con.prepareCall(sql);
 
-            ps.setString(1, registroPago.getCodigoActividad());
-            ps.setDouble(2, registroPago.getMaximaRemumeracion());
-            ps.setString(3, registroPago.getNombreMoneda());
+            proc.setString(1, registroPago.getCodigoActividad());
+            proc.setDouble(2, registroPago.getMaximaRemumeracion());
+            proc.setString(3, registroPago.getNombreMoneda());
 
-            ps.executeUpdate();
+            proc.executeUpdate();
             con.commit();
-            ps.close();
+            proc.close();
             con.close();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -519,7 +519,7 @@ public class AssetecDaoImpl implements AssetecDao{
                 "(?,\n" +
                 "?,\n" +
                 "?,\n" +
-                "?,\n" +
+                "TO_DATE(?,'DD/MM/YYYY'),\n" +
                 "?,\n" +
                 "(SELECT COD_MONEDA FROM MONEDA WHERE NOMBRE = UPPER(?)),\n" +
                 "(SELECT COD_TIPO FROM TIPO_COMPROBANTE WHERE TIPO = UPPER(?)),\n" +
@@ -551,7 +551,7 @@ public class AssetecDaoImpl implements AssetecDao{
     public void generarCierre(Proyecto proyecto) {
         String sql = "UPDATE PROYECTO\n" +
                 "SET ESTADO = 'EN ESPERA'\n" +
-                "WHERE COD_PROYECTO = <1>";
+                "WHERE COD_PROYECTO = ?";
         try {
             Connection con = jdbcTemplate.getDataSource().getConnection();
             PreparedStatement ps = con.prepareStatement(sql);
