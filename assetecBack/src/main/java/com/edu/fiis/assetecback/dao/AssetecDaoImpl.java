@@ -628,7 +628,7 @@ public class AssetecDaoImpl implements AssetecDao{
                 "R.FECHA AS FECHA_REPORTE,\n" +
                 "R.DESCRIPCION AS DESCRIPCION_REPORTE,\n" +
                 "R.NRO_REPORTE,\n" +
-                "TR.TIPO AS TIPO_REPORTE,\n" +
+                "TR.TIPO AS TIPO_REPORTE\n" +
                 "FROM REPORTE R\n" +
                 "INNER JOIN TIPO_REPORTE TR\n" +
                 " ON TR.COD_TIPO = R.COD_TIPO\n" +
@@ -661,7 +661,7 @@ public class AssetecDaoImpl implements AssetecDao{
         List<String> oraciones = new ArrayList<>();
         String sql = "SELECT\n" +
                 "'En la actividad ' || (SELECT NOMBRE FROM ACTIVIDAD WHERE COD_ACTIVIDAD = PA.COD_ACTIVIDAD_PADRE) ||\n" +
-                "' se gasto ' || SUM(CONVERTIR_MONTO(CP.IMPORTE,M1.NOMBRE)) || ' soles.'||\n" +
+                "' se gasto ' || SUM(CONVERTIR_MONTO(CP.IMPORTE,M1.NOMBRE)) || ' soles. '||\n" +
                 "'Además la empresa cubre con los gastos hasta por ' ||\n" +
                 "MAX(CONVERTIR_MONTO(G.MAX_REMU,M2.NOMBRE)) || ' soles.' AS oracion\n" +
                 "FROM PROYECTO_ACTIVIDADES PA\n" +
@@ -709,11 +709,11 @@ public class AssetecDaoImpl implements AssetecDao{
                 "    THEN ' comenzo ' || FECHA_INICIO_EST - FECHA_INICIO_REAL || ' dias antes.'\n" +
                 "  ELSE ' inicio sin retraso.'\n" +
                 "END\n" +
-                "|| ' Asimismo, el proyecto ' ||\n" +
+                "|| ' Asimismo, el proyecto' ||\n" +
                 "CASE\n" +
                 "  WHEN FECHA_FIN_REAL - FECHA_FIN_EST = 1\n" +
                 "    THEN ' tardo 1 dia en finalizar.'\n" +
-                "  WHEN FECHA_FIN_REAL - FECHA_FIN_EST > 0119\n" +
+                "  WHEN FECHA_FIN_REAL - FECHA_FIN_EST > 0\n" +
                 "    THEN ' tardo ' || FECHA_FIN_REAL - FECHA_FIN_EST || ' dias en finalizar.'\n" +
                 "  WHEN FECHA_FIN_REAL - FECHA_FIN_EST =-1\n" +
                 "    THEN ' finalizo 1 dia antes.'\n" +
@@ -730,7 +730,9 @@ public class AssetecDaoImpl implements AssetecDao{
             ps.setString(1, proyecto.getCodigoProyecto());
 
             ResultSet rs = ps.executeQuery();
-            texto = rs.getString("TEXTO");
+            while(rs.next()) {
+                texto = rs.getString("TEXTO");
+            }
             rs.close();
             ps.close();
             con.close();

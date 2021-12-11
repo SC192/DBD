@@ -197,7 +197,7 @@ public class AssetecControlador {
     }
 
     @RequestMapping(
-            value = "/treaer-reportes-proyecto",
+            value = "/traer-reportes-proyecto",
             produces = "application/json;charset=utf-8",
             method = RequestMethod.POST
     )
