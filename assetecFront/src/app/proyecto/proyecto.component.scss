@@ -1,0 +1,56 @@
+a:link, a:visited, a:active {
+  text-decoration:none;
+}
+nav.main-menu ul li.current-list-item > a {
+  color: #F28123;
+}
+
+nav.main-menu ul li a:hover {
+  color: #F28123;
+}
+nav.main-menu ul li a {
+  color: #fff;
+  font-weight: 700;
+  display: block;
+  padding: 15px;
+}
+nav.main-menu ul ul.sub-menu li a {
+  color: #555;
+  padding: 8px;
+  font-size: 13px;
+  font-weight: 650 ;
+}
+.cart-banner .content-column .text {
+  position: relative;
+  font-weight: 400;
+  line-height: 1.8em;
+  margin-top: 25px;
+  margin-bottom: 25px;
+}
+a.cart-btn {
+  margin-right: 25px;
+}
+.cart-banner .content-column h3 {
+  margin-bottom: 1rem;
+}
+tr.total-data td a div{
+  display: inline-table;
+}
+#estado{
+  width: 80px;
+  color: black;
+}
+#actividad{
+  width: 300px;
+  color: black;
+}
+.cart-banner {
+  background-color: #FFFFFF;
+}
+h3, .h3 {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 2.25rem;
+}
+
+
