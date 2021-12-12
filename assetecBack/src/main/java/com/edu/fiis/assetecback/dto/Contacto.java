@@ -6,4 +6,8 @@ import lombok.Data;
 public class Contacto {
     private String dni;
     private String ruc;
+    public Contacto(String dn, String ru){
+        dni = dn;
+        ruc = ru;
+    }
 }
