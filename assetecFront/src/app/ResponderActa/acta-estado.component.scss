@@ -1,0 +1,53 @@
+a:link, a:visited, a:active {
+  text-decoration:none;
+}
+nav.main-menu ul li.current-list-item > a {
+  color: #F28123;
+}
+
+nav.main-menu ul li a:hover {
+  color: #F28123;
+}
+nav.main-menu ul li a {
+  color: #fff;
+  font-weight: 700;
+  display: block;
+  padding: 15px;
+}
+nav.main-menu ul ul.sub-menu li a {
+  color: #555;
+  padding: 8px;
+  font-size: 13px;
+  font-weight: 650 ;
+}
+.acuerdo{
+  width: 819px;
+}
+#head{
+  font-size: 40px;
+  font-weight: 700;
+  color: black;
+  line-height: 2.25rem;
+  margin-bottom: 1rem;
+}
+.single-product-item {
+  padding: 20px;
+}
+h4 {
+  font-weight: 300;
+  text-transform: uppercase;
+  margin-bottom: 2rem;
+}
+.mb-0 {
+  background-color: #EFEFEF;
+  color: #051922;
+  font-size: 15px;
+  width: 100%;
+  text-align: left;
+  padding: 20px;
+  font-weight: 600;
+}
+.checkout-accordion-wrap {
+  margin-bottom: 2rem;
+}
+

@@ -1,0 +1,39 @@
+.single-logo-item {
+  max-width: 370px;
+  margin: 25px;
+}
+.single-logo-item img{
+  height: 130px;
+  max-width: 370px;
+  margin: 0px;
+}
+.single-logo-item p{
+
+  margin: 10px;
+  font-weight: 600;
+}
+.single-article-text{
+  margin-bottom: 30px;
+}
+a:link, a:visited, a:active {
+  text-decoration:none;
+}
+nav.main-menu ul li.current-list-item > a {
+  color: #F28123;
+}
+
+nav.main-menu ul li a:hover {
+  color: #F28123;
+}
+nav.main-menu ul li a {
+  color: #fff;
+  font-weight: 700;
+  display: block;
+  padding: 15px;
+}
+nav.main-menu ul ul.sub-menu li a {
+  color: #555;
+  padding: 8px;
+  font-size: 13px;
+  font-weight: 650 ;
+}

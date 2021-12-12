@@ -1,0 +1,43 @@
+a:link, a:visited, a:active {
+  text-decoration:none;
+}
+nav.main-menu ul li.current-list-item > a {
+  color: #F28123;
+}
+
+nav.main-menu ul li a:hover {
+  color: #F28123;
+}
+nav.main-menu ul li a {
+  color: #fff;
+  font-weight: 700;
+  display: block;
+  padding: 15px;
+}
+nav.main-menu ul ul.sub-menu li a {
+  color: #555;
+  padding: 8px;
+  font-size: 13px;
+  font-weight: 650 ;
+}
+ul.sub-menu li:hover a {
+  color: #F28123 !important;
+}
+.single-product-item{
+  padding-top: 50px;
+}
+.pagination-wrap ul li a{
+  font-weight: 650;
+  padding: 11px 14px;
+}
+.mt-150{
+  margin-top: 90px;
+}
+.single-product-item h3{
+  margin-bottom: 30px;
+  font-weight: 400;
+  font-size: 17px;
+}
+p.product-price span{
+  font-size: 13px;
+}

@@ -1,8 +1,8 @@
 package com.edu.fiis.assetecback.dao;
 
 import com.edu.fiis.assetecback.dto.*;
-import com.edu.fiis.assetecback.dto.request.Asistencia;
-import com.edu.fiis.assetecback.dto.request.TrabajadorActividad;
+import com.edu.fiis.assetecback.dto.request.*;
+import com.edu.fiis.assetecback.dto.responses.ReporteResponse;
 import com.edu.fiis.assetecback.dto.responses.ResumenTrabajador;
 import com.edu.fiis.assetecback.dto.responses.Rol;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Repository
@@ -18,69 +19,65 @@ public class AssetecDaoImpl implements AssetecDao{
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    public List<Proyecto> proyectoGerentes(String dni){
-        List<Proyecto> proyectos = new ArrayList<>();
-        String sql = "SELECT\n" +
-                "NOMBRE,\n" +
-                "COD_PROYECTO,\n" +
-                "ESTADO,\n" +
-                "DESCRIPCION,\n" +
-                "FECHA_FIN_REAL,\n" +
-                "FECHA_FIN_EST,\n" +
-                "FECHA_INICIO_REAL,\n" +
-                "FECHA_INICIO_EST \n" +
-                "FROM PROYECTO_TRABAJADOR_V\n" +
-                "WHERE (COD_PERFIL = 'GP' OR COD_PERFIL = 'JP')\n" +
-                "AND DNI_TRAB = ?";
+    private Boolean esCliente(Persona persona) {
+        boolean ans = true;
+        String sql = "select exists( " +
+                "select * from proyecto pr " +
+                "inner join proyecto_cliente pc " +
+                "  on pr.cod_proyecto = pc.cod_proyecto " +
+                "inner join contacto c " +
+                "  on c.dni = pc.dni " +
+                "inner join persona pe " +
+                "  on c.dni = pe.dni " +
+                "where c.dni = ?)";
         try {
             Connection con = jdbcTemplate.getDataSource().getConnection();
             PreparedStatement ps = con.prepareStatement(sql);
-
-            ps.setString(1, dni);
+            ps.setString(1, persona.getDni());
 
             ResultSet rs = ps.executeQuery();
             while(rs.next()) {
-                Proyecto proyecto = new Proyecto();
-                proyecto.setCodigoProyecto(rs.getString("COD_PROYECTO"));
-                proyecto.setEstado(rs.getString("ESTADO"));
-                proyecto.setNombre(rs.getString("NOMBRE"));
-                proyecto.setDescripcion(rs.getString("DESCRIPCION"));
-                proyecto.setFechaFinReal(rs.getString("FECHA_FIN_REAL"));
-                proyecto.setFechaFinEstimada(rs.getString("FECHA_FIN_EST"));
-                proyecto.setFechaInicioReal(rs.getString("FECHA_INICIO_REAL"));
-                proyecto.setFechaInicioEstimada(rs.getString("FECHA_INICIO_EST"));
-                proyectos.add(proyecto);
+                ans = rs.getBoolean("exists");
             }
             rs.close();
             ps.close();
             con.close();
-
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        return proyectos;
+        return ans;
     }
 
-    public List<Proyecto> proyectoOtrosUsuarios(String dni){
+    public List<Proyecto> treaerProyectosUsuario(Persona persona){
         List<Proyecto> proyectos = new ArrayList<>();
-        String sql = "SELECT\n" +
-                "NOMBRE,\n" +
-                "COD_PROYECTO,\n" +
-                "ESTADO,\n" +
-                "DESCRIPCION,\n" +
-                "FECHA_FIN_REAL,\n" +
-                "FECHA_FIN_EST,\n" +
-                "FECHA_INICIO_REAL,\n" +
-                "FECHA_INICIO_EST \n" +
-                "FROM PROYECTO_TRABAJADOR_V\n" +
-                "WHERE NOT (COD_PERFIL = 'GP' OR COD_PERFIL = 'JP')\n" +
-                "AND NOT ESTADO = 'DESAPROBADO'\n" +
-                "AND DNI_TRAB = ?";
+        String adicional;
+        if(esCliente(persona)) {
+            adicional = " from proyecto p " +
+                    "inner join proyecto_cliente pc " +
+                    "  on p.cod_proyecto = pc.cod_proyecto " +
+                    "inner join contacto c " +
+                    "  on c.dni = pc.dni " +
+                    "inner join persona pe " +
+                    "  on c.dni = pe.dni " +
+                    "where c.dni = ?";
+        } else {
+            adicional = " FROM PROYECTO_TRABAJADOR_V p " +
+                    "WHERE DNI_TRAB = ?";
+        }
+        String sql = "SELECT " +
+                " NOMBRE, " +
+                " P.COD_PROYECTO, " +
+                " ESTADO, " +
+                " DESCRIPCION, " +
+                " FECHA_FIN_REAL, " +
+                " FECHA_FIN_EST, " +
+                " FECHA_INICIO_REAL, " +
+                " FECHA_INICIO_EST " + adicional;
         try {
             Connection con = jdbcTemplate.getDataSource().getConnection();
             PreparedStatement ps = con.prepareStatement(sql);
 
-            ps.setString(1, dni);
+            ps.setString(1, persona.getDni());
 
             ResultSet rs = ps.executeQuery();
             while(rs.next()) {
@@ -98,7 +95,6 @@ public class AssetecDaoImpl implements AssetecDao{
             rs.close();
             ps.close();
             con.close();
-
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -146,17 +142,15 @@ public class AssetecDaoImpl implements AssetecDao{
             rs.close();
             ps.close();
             con.close();
-
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-
         return actividades;
     }
 
     public List<Alcance> obtenerAlcancesProyecto(Proyecto proyecto) {
         List<Alcance> alcances = new ArrayList<>();
-        String sql = "SELECT ALCANCE FROM ALCANCE\n" +
+        String sql = "SELECT ALCANCE FROM ALCANCE " +
                 "WHERE COD_PROYECTO = ?";
 
         try {
@@ -175,7 +169,6 @@ public class AssetecDaoImpl implements AssetecDao{
             rs.close();
             ps.close();
             con.close();
-
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -203,7 +196,6 @@ public class AssetecDaoImpl implements AssetecDao{
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return objetivos;
     }
 
@@ -235,11 +227,12 @@ public class AssetecDaoImpl implements AssetecDao{
                 rol.setCostoHora(rs.getDouble("COSTO_HORA"));
                 roles.add(rol);
             }
-
+            rs.close();
+            ps.close();
+            con.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return roles;
     }
 
@@ -259,7 +252,9 @@ public class AssetecDaoImpl implements AssetecDao{
                 o.setObjetivo(rs.getString("OBJETIVO"));
                 oa.add(o);
             }
-
+            rs.close();
+            ps.close();
+            con.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -269,7 +264,7 @@ public class AssetecDaoImpl implements AssetecDao{
     public void completarActividad(Actividad actividad) {
         String sql = "UPDATE ACTIVIDAD\n" +
                 "SET FECHA_FIN_REAL = CURRENT_DATE\n" +
-                "WHERE COD_ACTIVIDAD = ?\n";
+                "WHERE COD_ACTIVIDAD = ?";
         try {
             Connection con = jdbcTemplate.getDataSource().getConnection();
             PreparedStatement ps = con.prepareStatement(sql);
@@ -277,6 +272,7 @@ public class AssetecDaoImpl implements AssetecDao{
             ps.setString(1, actividad.getCodigoActividad());
 
             ps.executeUpdate();
+            con.commit();
             ps.close();
             con.close();
         } catch (SQLException e) {
@@ -298,7 +294,7 @@ public class AssetecDaoImpl implements AssetecDao{
                 "ON PER.COD_PERFIL = TP.COD_PERFIL\n" +
                 "INNER JOIN MONEDA M\n" +
                 "ON PER.COD_MONEDA = M.COD_MONEDA\n" +
-                "WHERE COD_ACTIVIDAD = <1>\n" +
+                "WHERE COD_ACTIVIDAD = ? \n" +
                 "GROUP BY PER.NOMBRE";
         try {
             Connection con = jdbcTemplate.getDataSource().getConnection();
@@ -363,14 +359,13 @@ public class AssetecDaoImpl implements AssetecDao{
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return ra;
     }
 
     public void registrarAsistenciaTrabajador(Asistencia ra) {
         String sql = "INSERT INTO\n" +
-                "TRABAJADOR_PERFIL_ACTIVIDAD(FECHA,CANT_HORAS,COD_ACTIVIDAD,DNI,COD_PERFIL)\n" +
-                "VALUES (TO_DATE(?,‘DD/MM/YYYY’), ?, ?, ?,(SELECT COD_PERFIL FROM PERFIL WHERE NOMBRE = ?))";
+        "TRABAJADOR_PERFIL_ACTIVIDAD(CODIGO, FECHA,CANTI_HORAS,COD_ACTIVIDAD,DNI,COD_PERFIL)\n" +
+        "VALUES (gen_cod('TRABAJADOR_PERFIL_ACTIVIDAD'),TO_DATE(?,'DD/MM/YYYY'), ?, ?, ?,(SELECT COD_PERFIL FROM PERFIL WHERE NOMBRE = ?))";
 
         try {
             Connection con = jdbcTemplate.getDataSource().getConnection();
@@ -383,6 +378,7 @@ public class AssetecDaoImpl implements AssetecDao{
             ps.setString(5, ra.getNombreRol());
 
             ps.executeUpdate();
+            con.commit();
             ps.close();
             con.close();
         } catch (SQLException e) {
@@ -398,7 +394,7 @@ public class AssetecDaoImpl implements AssetecDao{
                 "PRS.DNI,\n" +
                 "MAX(PRS.PRIMER_NOMBRE) AS NOMBRE,\n" +
                 "MAX(PRS.APELLIDO_P) AS APELLIDO_P,\n" +
-                "SUM(TPA.CANT_HORAS) AS HORAS_T\n" +
+                "SUM(TPA.CANTI_HORAS) AS HORAS_T\n" +
                 "FROM TRABAJADOR_PERFIL_ACTIVIDAD TPA\n" +
                 "INNER JOIN TRABAJADOR_PERFIL TP\n" +
                 "ON TPA.DNI = TP.DNI AND TPA.COD_PERFIL = TP.COD_PERFIL\n" +
@@ -428,6 +424,9 @@ public class AssetecDaoImpl implements AssetecDao{
                 resumenTrabajador.add(rt);
             }
 
+            rs.close();
+            ps.close();
+            con.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -439,7 +438,7 @@ public class AssetecDaoImpl implements AssetecDao{
         String sql = "SELECT\n" +
                 "CODIGO,\n" +
                 "FECHA,\n" +
-                "CANTI_HORAS,\n" +
+                "CANTI_HORAS \n" +
                 "FROM TRABAJADOR_PERFIL_ACTIVIDAD\n" +
                 "WHERE COD_ACTIVIDAD = ? \n" +
                 "AND DNI = ? \n" +
@@ -454,8 +453,14 @@ public class AssetecDaoImpl implements AssetecDao{
 
             ResultSet rs = ps.executeQuery();
             while (rs.next()){
-                Asistencia a = asistencia;
-                a.setCodigo(rs.getInt("CODIGO"));
+                Asistencia a = new Asistencia();
+                a.setNombreRol(asistencia.getNombreRol());
+                a.setCostoHora(asistencia.getCostoHora());
+                a.setDni(asistencia.getDni());
+                a.setNombre(asistencia.getNombre());
+                a.setApellidoP(asistencia.getApellidoP());
+                a.setApellidoM(asistencia.getApellidoM());
+                a.setCodigo(rs.getString("CODIGO"));
                 a.setFecha(rs.getString("FECHA"));
                 a.setHorasTrabajadas(rs.getDouble("CANTI_HORAS"));
                 asistencias.add(a);
@@ -467,7 +472,323 @@ public class AssetecDaoImpl implements AssetecDao{
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return asistencias;
+    }
+
+    public void eliminarAsistenciaTrabajador(Asistencia asistencia){
+        String sql = "DELETE FROM TRABAJADOR_PERFIL_ACTIVIDAD\n" +
+                "WHERE CODIGO = ?\n";
+        try {
+            Connection con = jdbcTemplate.getDataSource().getConnection();
+            PreparedStatement ps = con.prepareStatement(sql);
+
+            ps.setString(1, asistencia.getCodigo());
+
+            ps.executeUpdate();
+            con.commit();
+            ps.close();
+            con.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void registrarPago(RegistroPago registroPago) {
+        String sql = "CALL registrar_remu(?,CAST(? AS NUMERIC(6,2)),?)";
+        try {
+            Connection con = jdbcTemplate.getDataSource().getConnection();
+            CallableStatement proc = con.prepareCall(sql);
+
+            proc.setString(1, registroPago.getCodigoActividad());
+            proc.setDouble(2, registroPago.getMaximaRemumeracion());
+            proc.setString(3, registroPago.getNombreMoneda());
+
+            proc.executeUpdate();
+            con.commit();
+            proc.close();
+            con.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void registrarComprobantePago(RegistroComprobante registroComprobante) {
+        String sql = "INSERT INTO COMPROBANTE_PAGO(NUMERO, IMPORTE,PROVEEDOR, FECHA,\n" +
+                "DESCRIPCION, COD_MONEDA, COD_TIPO_COMP, COD_TIPO_GASTO, COD_ACTIVIDAD)\n" +
+                "VALUES\n" +
+                "(?,\n" +
+                "?,\n" +
+                "?,\n" +
+                "TO_DATE(?,'DD/MM/YYYY'),\n" +
+                "?,\n" +
+                "(SELECT COD_MONEDA FROM MONEDA WHERE NOMBRE = UPPER(?)),\n" +
+                "(SELECT COD_TIPO FROM TIPO_COMPROBANTE WHERE TIPO = UPPER(?)),\n" +
+                "(SELECT COD_TIPO FROM TIPO_GASTO WHERE TIPO = UPPER(?)),\n" +
+                "?)";
+        try {
+            Connection con = jdbcTemplate.getDataSource().getConnection();
+            PreparedStatement ps = con.prepareStatement(sql);
+
+            ps.setString(1, registroComprobante.getNumero());
+            ps.setDouble(2, registroComprobante.getImporte());
+            ps.setString(3, registroComprobante.getProveedor());
+            ps.setString(4, registroComprobante.getFecha());
+            ps.setString(5, registroComprobante.getDescripcion());
+            ps.setString(6, registroComprobante.getNombreMoneda());
+            ps.setString(7, registroComprobante.getNombreTipoComprobante());
+            ps.setString(8, registroComprobante.getNombreTipoGasto());
+            ps.setString(9, registroComprobante.getCodigoActividad());
+
+            ps.executeUpdate();
+            con.commit();
+            ps.close();
+            con.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void generarCierre(Proyecto proyecto) {
+        String sql = "UPDATE PROYECTO\n" +
+                "SET ESTADO = 'EN ESPERA'\n" +
+                "WHERE COD_PROYECTO = ?";
+        try {
+            Connection con = jdbcTemplate.getDataSource().getConnection();
+            PreparedStatement ps = con.prepareStatement(sql);
+
+            ps.setString(1, proyecto.getCodigoProyecto());
+
+            ps.executeUpdate();
+            con.commit();
+            ps.close();
+            con.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void crearActa(RegistroActa registroActa) {
+        String sql = "CALL crear_acta(?,?)";
+        try {
+            Connection con = jdbcTemplate.getDataSource().getConnection();
+            CallableStatement proc = con.prepareCall(sql);
+
+            Array sqlArray = con.createArrayOf("varchar", registroActa.getAcuerdos().toArray(new String[0]));
+            proc.setArray(1, sqlArray);
+            proc.setString(2, registroActa.getCodigoProyecto());
+
+            proc.execute();
+            con.commit();
+            proc.close();
+            con.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void aceptarActa(RespuestaCliente respuestaCliente) {
+        String sql = "CALL aceptar_acta(?,?);";
+        try {
+            Connection con = jdbcTemplate.getDataSource().getConnection();
+            CallableStatement proc = con.prepareCall(sql);
+
+            proc.setString(1, respuestaCliente.getDni());
+            proc.setString(2, respuestaCliente.getCodigoProyecto());
+
+            proc.executeUpdate();
+            con.commit();
+            proc.close();
+            con.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void rechazarActa(RespuestaCliente respuestaCliente) {
+        String sql = "CALL rechazar_acta(?,?);";
+        try {
+            Connection con = jdbcTemplate.getDataSource().getConnection();
+            CallableStatement proc = con.prepareCall(sql);
+
+            proc.setString(1, respuestaCliente.getDni());
+            proc.setString(2, respuestaCliente.getCodigoProyecto());
+
+            proc.executeUpdate();
+            con.commit();
+            proc.close();
+            con.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public List<ReporteResponse> traerReportesProyecto(Proyecto proyecto) {
+        List<ReporteResponse> reporteResponses = new ArrayList<>();
+        String sql = "SELECT\n" +
+                "R.FECHA AS FECHA_REPORTE,\n" +
+                "R.DESCRIPCION AS DESCRIPCION_REPORTE,\n" +
+                "R.NRO_REPORTE,\n" +
+                "TR.TIPO AS TIPO_REPORTE\n" +
+                "FROM REPORTE R\n" +
+                "INNER JOIN TIPO_REPORTE TR\n" +
+                " ON TR.COD_TIPO = R.COD_TIPO\n" +
+                "WHERE COD_PROYECTO = ?";
+        try {
+            Connection con = jdbcTemplate.getDataSource().getConnection();
+            PreparedStatement ps = con.prepareStatement(sql);
+            
+            ps.setString(1, proyecto.getCodigoProyecto());
+            
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()) {
+                ReporteResponse rr = new ReporteResponse();
+                rr.setNumeroReporte(rs.getInt("NRO_REPORTE"));
+                rr.setTipoReporte(rs.getString("TIPO_REPORTE"));
+                rr.setDescripcion(rs.getString("DESCRIPCION_REPORTE"));
+                rr.setFecha(rs.getString("FECHA_REPORTE"));
+                reporteResponses.add(rr);
+            }
+            rs.close();
+            ps.close();
+            con.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return reporteResponses;
+    }
+
+    public List<String> reporteGastosActividad(Proyecto proyecto) {
+        List<String> oraciones = new ArrayList<>();
+        String sql = "SELECT\n" +
+                "'En la actividad ' || (SELECT NOMBRE FROM ACTIVIDAD WHERE COD_ACTIVIDAD = PA.COD_ACTIVIDAD_PADRE) ||\n" +
+                "' se gasto ' || SUM(CONVERTIR_MONTO(CP.IMPORTE,M1.NOMBRE)) || ' soles. '||\n" +
+                "'Además la empresa cubre con los gastos hasta por ' ||\n" +
+                "MAX(CONVERTIR_MONTO(G.MAX_REMU,M2.NOMBRE)) || ' soles.' AS oracion\n" +
+                "FROM PROYECTO_ACTIVIDADES PA\n" +
+                "INNER JOIN COMPROBANTE_PAGO CP\n" +
+                "ON PA.COD_ACTIVIDAD_PADRE = CP.COD_ACTIVIDAD OR PA.CODIGO_ACT_HIJA = CP.COD_ACTIVIDAD\n" +
+                "INNER JOIN GASTO G\n" +
+                "ON PA.COD_GASTO = G.COD_GASTO\n" +
+                "INNER JOIN MONEDA M1\n" +
+                "ON CP.COD_MONEDA = M1.COD_MONEDA\n" +
+                "INNER JOIN MONEDA M2\n" +
+                "ON G.COD_MONEDA = M2.COD_MONEDA\n" +
+                "WHERE PA.CODIGO_PROYECTO = ?\n" +
+                "GROUP BY PA.COD_ACTIVIDAD_PADRE";
+        try {
+            Connection con = jdbcTemplate.getDataSource().getConnection();
+            PreparedStatement ps = con.prepareStatement(sql);
+
+            ps.setString(1, proyecto.getCodigoProyecto());
+
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()) {
+                oraciones.add(rs.getString("oracion"));
+            }
+            rs.close();
+            ps.close();
+            con.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return oraciones;
+    }
+
+    public String reporteFechasProyecto(Proyecto proyecto) {
+        String texto = "";
+        String sql = "SELECT\n" +
+                "'El proyecto ' || nombre ||\n" +
+                "CASE\n" +
+                "  WHEN FECHA_INICIO_REAL - FECHA_INICIO_EST = 1\n" +
+                "    THEN ' tardo 1 dia en iniciar.'\n" +
+                "  WHEN FECHA_INICIO_REAL - FECHA_INICIO_EST > 0\n" +
+                "    THEN ' tardo ' || FECHA_INICIO_REAL - FECHA_INICIO_EST || ' dias en iniciar.'\n" +
+                "  WHEN FECHA_INICIO_REAL - FECHA_INICIO_EST =-1\n" +
+                "    THEN ' comenzo 1 dia antes.'\n" +
+                "  WHEN FECHA_INICIO_REAL - FECHA_INICIO_EST < 0\n" +
+                "    THEN ' comenzo ' || FECHA_INICIO_EST - FECHA_INICIO_REAL || ' dias antes.'\n" +
+                "  ELSE ' inicio sin retraso.'\n" +
+                "END\n" +
+                "|| ' Asimismo, el proyecto' ||\n" +
+                "CASE\n" +
+                "  WHEN FECHA_FIN_REAL - FECHA_FIN_EST = 1\n" +
+                "    THEN ' tardo 1 dia en finalizar.'\n" +
+                "  WHEN FECHA_FIN_REAL - FECHA_FIN_EST > 0\n" +
+                "    THEN ' tardo ' || FECHA_FIN_REAL - FECHA_FIN_EST || ' dias en finalizar.'\n" +
+                "  WHEN FECHA_FIN_REAL - FECHA_FIN_EST =-1\n" +
+                "    THEN ' finalizo 1 dia antes.'\n" +
+                "  WHEN FECHA_FIN_REAL - FECHA_FIN_EST < 0\n" +
+                "    THEN ' finalizo ' || FECHA_FIN_EST - FECHA_FIN_REAL || ' dias antes.'\n" +
+                "  ELSE ' finalizo sin retraso.'\n" +
+                "END AS TEXTO\n" +
+                "FROM PROYECTO\n" +
+                "WHERE COD_PROYECTO = ?";
+        try {
+            Connection con = jdbcTemplate.getDataSource().getConnection();
+            PreparedStatement ps = con.prepareStatement(sql);
+
+            ps.setString(1, proyecto.getCodigoProyecto());
+
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()) {
+                texto = rs.getString("TEXTO");
+            }
+            rs.close();
+            ps.close();
+            con.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return texto;
+    }
+
+    public List<String> reporteFechasActividadesProyecto(Proyecto proyecto) {
+        List<String> oraciones = new ArrayList<>();
+        String sql = "SELECT\n" +
+                "'La actividad ' || (SELECT NOMBRE FROM ACTIVIDAD WHERE COD_ACTIVIDAD = PA.COD_ACTIVIDAD_PADRE) ||\n" +
+                "CASE\n" +
+                "  WHEN MIN(pa.fecha_inicio_real_act_padre) - MIN(pa.fecha_inicio_est_act_padre) = 1\n" +
+                "    THEN ' tardo 1 dia en iniciar.'\n" +
+                "  WHEN MIN(pa.fecha_inicio_real_act_padre) - MIN(pa.fecha_inicio_est_act_padre) > 0\n" +
+                "    THEN ' tardo ' || MIN(pa.fecha_inicio_real_act_padre) - MIN(pa.fecha_inicio_est_act_padre) || ' dias en iniciar.'\n" +
+                "  WHEN MIN(pa.fecha_inicio_real_act_padre) - MIN(pa.fecha_inicio_est_act_padre) = -1\n" +
+                "    THEN ' comenzo un dia antes.'\n" +
+                "  WHEN MIN(pa.fecha_inicio_real_act_padre) - MIN(pa.fecha_inicio_est_act_padre) < 0\n" +
+                "    THEN ' comenzo ' || MIN(pa.fecha_inicio_real_act_padre) - MIN(pa.fecha_inicio_est_act_padre) || ' dias antes.'\n" +
+                "  ELSE ' inicio sin retraso.'\n" +
+                "END\n" +
+                "|| ' Asimismo, la actividad ' ||\n" +
+                "CASE\n" +
+                "  WHEN MAX(pa.fecha_fin_real_act_padre) - MAX(pa.fecha_fin_est_act_padre) = 1\n" +
+                "    THEN ' tardo 1 dia en finalizar.'\n" +
+                "  WHEN MAX(pa.fecha_fin_real_act_padre) - MAX(pa.fecha_fin_est_act_padre) > 0\n" +
+                "    THEN ' tardo ' || MAX(pa.fecha_fin_real_act_padre) - MAX(pa.fecha_fin_est_act_padre) || ' dias en finalizar.'\n" +
+                "  WHEN MAX(pa.fecha_fin_real_act_padre) - MAX(pa.fecha_fin_est_act_padre) = -1\n" +
+                "    THEN ' finalizo un dia antes.'\n" +
+                "  WHEN MAX(pa.fecha_fin_real_act_padre) - MAX(pa.fecha_fin_est_act_padre) < 0\n" +
+                "    THEN ' finalizo ' || MAX(pa.fecha_fin_real_act_padre) - MAX(pa.fecha_fin_est_act_padre) || ' dias antes.'\n" +
+                "  ELSE ' finalizo sin retraso.'\n" +
+                "END AS TEXTO\n" +
+                "FROM PROYECTO_ACTIVIDADES PA\n" +
+                "WHERE PA.CODIGO_PROYECTO = ? \n" +
+                "GROUP BY PA.COD_ACTIVIDAD_PADRE";
+
+        try {
+            Connection con = jdbcTemplate.getDataSource().getConnection();
+            PreparedStatement ps = con.prepareStatement(sql);
+
+            ps.setString(1, proyecto.getCodigoProyecto());
+
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()) {
+                oraciones.add(rs.getString("TEXTO"));
+            }
+            rs.close();
+            ps.close();
+            con.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return oraciones;
     }
 }
