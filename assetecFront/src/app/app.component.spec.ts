@@ -15,6 +15,7 @@ import {SolicitudTrabajadorComponent} from './solicitud-trabajador/solicitud-tra
 import {ResultadosComponent} from './resultados/resultados.component';
 import {GastoComponent} from './gasto/gasto.component';
 import {ComprobanteComponent} from './comprobante/comprobante.component';
+import {ActaEstadoComponent} from './acta-estado/acta-estado.component';
 
 describe('AppComponent', () => {
   beforeEach(async () => {
@@ -38,6 +39,7 @@ describe('AppComponent', () => {
         ResultadosComponent,
         GastoComponent,
         ComprobanteComponent,
+        ActaEstadoComponent
       ],
     }).compileComponents();
   });

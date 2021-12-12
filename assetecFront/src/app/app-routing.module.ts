@@ -14,6 +14,7 @@ import {PerfilComponent} from './perfil/perfil.component';
 import {ResultadosComponent} from './resultados/resultados.component';
 import {GastoComponent} from './gasto/gasto.component';
 import {ComprobanteComponent} from './comprobante/comprobante.component';
+import {ActaEstadoComponent} from './acta-estado/acta-estado.component';
 
 const routes: Routes = [
   {path: '', component: SigninComponent},
@@ -30,6 +31,7 @@ const routes: Routes = [
   {path: 'resultados', component: ResultadosComponent},
   {path: 'gasto', component: GastoComponent},
   {path: 'comprobante', component: ComprobanteComponent},
+  {path: 'actaEstado', component: ActaEstadoComponent},
 ];
 
 @NgModule({

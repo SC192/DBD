@@ -1,0 +1,58 @@
+.card-header h5 button::before {
+  left: 520px ;
+}
+.card-header h5 button {
+
+  text-align: center;
+
+}
+a:link, a:visited, a:active {
+  text-decoration:none;
+}
+nav.main-menu ul li.current-list-item > a {
+  color: #F28123;
+}
+
+nav.main-menu ul li a:hover {
+  color: #F28123;
+}
+nav.main-menu ul li a {
+  color: #fff;
+  font-weight: 700;
+  display: block;
+  padding: 15px;
+}
+nav.main-menu ul ul.sub-menu li a {
+  color: #555;
+  padding: 8px;
+  font-size: 13px;
+  font-weight: 650 ;
+}
+#head{
+  font-size: 40px;
+  font-weight: 700;
+  color: black;
+  line-height: 2.25rem;
+  margin-bottom: 1rem;
+}
+h4 {
+  font-weight: 300;
+  text-transform: uppercase;
+  margin-bottom: 2rem;
+}
+
+select {
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  padding: 15px;
+  width: 100%;
+  height: 57px;
+}
+.name{
+  height: 57px;
+  margin-bottom: 13px;
+  vertical-align: center;
+}
+input[type="number"] {
+  margin-bottom: 0px !important;
+}

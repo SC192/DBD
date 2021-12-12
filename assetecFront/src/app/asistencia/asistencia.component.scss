@@ -26,3 +26,41 @@ nav.main-menu ul ul.sub-menu li a {
   font-size: 13px;
   font-weight: 650 ;
 }
+.d-flex {
+  display: flex !important;
+}
+.coupon-form-wrap form p input{
+  margin-right: 2rem;
+  margin-bottom: 2rem;
+}
+
+.coupon-section {
+  margin-top: 0px;
+}
+input[type="number"] {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 10px;
+  width: 100px;
+  margin-bottom: 0px !important;
+}
+input[type="date"] {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 10px;
+  width: 135px;
+  margin-bottom: 0px !important;
+}
+#head{
+  font-size: 40px;
+  font-weight: 700;
+  color: black;
+  line-height: 2.25rem;
+  margin-bottom: 1rem;
+}
+h4 {
+  margin-bottom: 2rem;
+  font-weight: 300;
+  text-transform: uppercase;
+}
+

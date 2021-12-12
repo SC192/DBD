@@ -19,6 +19,7 @@ import { PerfilComponent } from './perfil/perfil.component';
 import { ResultadosComponent } from './resultados/resultados.component';
 import { ComprobanteComponent } from './comprobante/comprobante.component';
 import { GastoComponent } from './gasto/gasto.component';
+import { ActaEstadoComponent } from './acta-estado/acta-estado.component';
 
 @NgModule({
   declarations: [
@@ -37,6 +38,7 @@ import { GastoComponent } from './gasto/gasto.component';
     ResultadosComponent,
     ComprobanteComponent,
     GastoComponent,
+    ActaEstadoComponent,
   ],
   imports: [
     BrowserModule,
