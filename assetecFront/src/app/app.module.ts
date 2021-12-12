@@ -8,18 +8,18 @@ import {FormsModule} from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
 import { BuscadorProyectoComponent } from './buscadorProyecto/buscador-proyecto.component';
 import { SigninComponent } from './signin/signin.component';
-import { SignupComponent } from './signup/signup.component';
+import { SignupComponent } from './CrearCuenta/signup.component';
 import { AsistenciaComponent } from './asistencia/asistencia.component';
 import { ProyectoComponent } from './proyecto/proyecto.component';
 import { ActividadComponent } from './actividad/actividad.component';
-import { ActaComponent } from './acta/acta.component';
+import { ActaComponent } from './LlenarYEnviarActa/acta.component';
 import { SolicitudContactoComponent } from './solicitud-contacto/solicitud-contacto.component';
 import { SolicitudTrabajadorComponent } from './solicitud-trabajador/solicitud-trabajador.component';
 import { PerfilComponent } from './perfil/perfil.component';
 import { ResultadosComponent } from './resultados/resultados.component';
 import { ComprobanteComponent } from './comprobante/comprobante.component';
 import { GastoComponent } from './gasto/gasto.component';
-import { ActaEstadoComponent } from './acta-estado/acta-estado.component';
+import { ActaEstadoComponent } from './ResponderActa/acta-estado.component';
 
 @NgModule({
   declarations: [

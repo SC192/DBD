@@ -3,9 +3,9 @@ import { Routes, RouterModule } from '@angular/router';
 import {HomeComponent} from './home/home.component';
 import {AsistenciaComponent} from './asistencia/asistencia.component';
 import {ActividadComponent} from './actividad/actividad.component';
-import {ActaComponent} from './acta/acta.component';
+import {ActaComponent} from './LlenarYEnviarActa/acta.component';
 import {BuscadorProyectoComponent} from './buscadorProyecto/buscador-proyecto.component';
-import {SignupComponent} from './signup/signup.component';
+import {SignupComponent} from './CrearCuenta/signup.component';
 import {SigninComponent} from './signin/signin.component';
 import {ProyectoComponent} from './proyecto/proyecto.component';
 import {SolicitudContactoComponent} from './solicitud-contacto/solicitud-contacto.component';
@@ -14,7 +14,7 @@ import {PerfilComponent} from './perfil/perfil.component';
 import {ResultadosComponent} from './resultados/resultados.component';
 import {GastoComponent} from './gasto/gasto.component';
 import {ComprobanteComponent} from './comprobante/comprobante.component';
-import {ActaEstadoComponent} from './acta-estado/acta-estado.component';
+import {ActaEstadoComponent} from './ResponderActa/acta-estado.component';
 
 const routes: Routes = [
   {path: '', component: SigninComponent},
