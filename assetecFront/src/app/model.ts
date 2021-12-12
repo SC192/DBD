@@ -7,206 +7,205 @@ export class Moneda {
 }
 
 export class Rol {
-  nombrePerfil: string;
-  cantidad: number;
-  totalHoras: number;
-  costoHora: number;
+  constructor(public cantidad: number,
+              public totalHoras: number,
+              public costoHora: number) {}
 }
 
 export class ActaAcuerdo {
-  codigoAcuerdo: string;
-  acuerdo: string;
+  constructor(public codigoAcuerdo: string,
+              public acuerdo: string) {}
 }
 
 export class Acta {
-  codigoActa: string;
-  fecha: string;
-  estado: string;
-  acuerdos: ActaAcuerdo [];
+  constructor(public codigoActa: string,
+              public fecha: string,
+              public estado: string,
+              public acuerdos: ActaAcuerdo []) {}
 }
 
 export class Solicitud {
-  codigoSolicitud: string;
-  fechaSolicitud: string;
-  fechaModificacion: string;
-  estado: string;
-  solicitante: Persona;
-  tipo: TipoSolicitud;
+  constructor(public codigoSolicitud: string,
+              public fechaSolicitud: string,
+              public fechaModificacion: string,
+              public estado: string,
+              public solicitante: Persona,
+              public tipo: TipoSolicitud) {}
 }
 
 export class Telefono {
-  codigoTelefono: string;
-  numero: string;
-  prefijo: string;
+  constructor(public codigoTelefono: string,
+              public numero: string,
+              public prefijo: string) {}
 }
 
 export class TipoComprobante {
-  codigoTipo: string;
-  tipo: string;
-  descripcion: string;
+  constructor(public codigoTipo: string,
+              public tipo: string,
+              public descripcion: string) {}
 }
 export class TipoGasto {
-  codigoTipo: string;
-  tipo: string;
-  descripcion: string;
+  constructor(public codigoTipo: string,
+              public tipo: string,
+              public descripcion: string) {}
 }
 
 export class TipoReporte {
-  codigoTipo: string;
-  descripcion: string;
-  tipo: string;
+  constructor(public codigoTipo: string,
+              public descripcion: string,
+              public tipo: string) {}
 }
 
 export class TipoSolicitud {
-  codigoTipo: string;
-  tipo: string;
-  descripcion: string;
+  constructor(public codigoTipo: string,
+              public tipo: string,
+              public descripcion: string) {}
 }
 
 export class Actividad {
-  codigoActividad: string;
-  nombre: string;
-  descripcion: string;
-  fechaInicioEstimada: string;
-  fechaInicioReal: string;
-  fechaFinEstimada: string;
-  fechaFinReal: string;
-  gasto: Gasto;
-  cantidadHoras: number;
-  posicion: number;
-  actividadesHijas: Actividad [];
-  objetivos: ObjetivoActividad [];
+  constructor(public codigoActividad: string,
+              public nombre: string,
+              public descripcion: string,
+              public fechaInicioEstimada: string,
+              public fechaInicioReal: string,
+              public fechaFinEstimada: string,
+              public fechaFinReal: string,
+              public gasto: Gasto,
+              public cantidadHoras: number,
+              public posicion: number,
+              public actividadesHijas: Actividad [],
+              public objetivos: ObjetivoActividad []) {}
 }
 
 export class Correo {
-  codigoCorreo: string;
-  correo: string;
+  constructor(public codigoCorreo: string,
+              public correo: string) {}
 }
 
 export class Direccion {
-  codigoDireccion: string;
-  codigoPostal: string;
-  nombre: string;
-  unidad: string;
-  distrito: string;
-  provincia: string;
-  pais: string;
+  constructor(public codigoDireccion: string,
+              public codigoPostal: string,
+              public nombre: string,
+              public unidad: string,
+              public distrito: string,
+              public provincia: string,
+              public pais: string) {}
 }
 
 export class Alcance {
-  codigoAlcance: string;
-  alcance: string;
+  constructor(public codigoAlcance: string,
+              public alcance: string) {}
 }
 
 export class ComprobantePago {
-  numero: string;
-  importe: number;
-  fecha: string;
-  proveedor: string;
-  descripcion: string;
-  moneda: Moneda;
-  tipoComprobante: TipoComprobante;
-  tipoGasto: TipoGasto;
+  constructor(public numero: string,
+              public importe: number,
+              public fecha: string,
+              public proveedor: string,
+              public descripcion: string,
+              public moneda: Moneda,
+              public tipoComprobante: TipoComprobante,
+              public tipoGasto: TipoGasto) {}
 }
 
 export class Gasto {
-  codigoGasto: string;
-  maximaRemuneracion: number;
-  moneda: Moneda;
-  comprobantes: ComprobantePago [];
+  constructor(public codigoGasto: string,
+              public maximaRemuneracion: number,
+              public moneda: Moneda,
+              public comprobantes: ComprobantePago []) {}
 }
 
 export class Cliente {
-  ruc: string;
-  razonSocial: string;
-  contactos: Persona [];
+  constructor(public ruc: string,
+              public razonSocial: string,
+              public contactos: Persona []) {}
 }
 
 export class Objetivo {
-  posicion: number;
-  descripcion: string;
-  objetivosHijos: Objetivo;
+  constructor(public posicion: number,
+              public descripcion: string,
+              public objetivosHijos: Objetivo) {}
 }
 
 export class Reporte {
-  numeroReporte: number;
-  fecha: string;
-  descripcion: string;
-  tipo: TipoReporte;
+  constructor(public numeroReporte: number,
+              public fecha: string,
+              public descripcion: string,
+              public tipo: TipoReporte) {}
 }
 export class ObjetivoActividad {
-  codigoObjetivoActividad: string;
-  objetivo: string;
+  constructor(public codigoObjetivoActividad: string,
+              public objetivo: string) {}
 }
 
 export class Perfil {
-  codigoPerfil: string;
-  nombre: string;
-  sueldo: number;
-  moneda: Moneda;
+  constructor(public codigoPerfil: string,
+              public nombre: string,
+              public sueldo: number,
+              public moneda: Moneda) {}
 }
 /////////////////////
 export class ResumenTrabajador {
-  nombreRol: string;
-  costoHora: number;
-  dni: string;
-  nombre: string;
-  apellidoP: string;
-  apellidoM: string;
-  horasTotales: number;
+  public nombreRol: string;
+  public costoHora: number;
+  public dni: string;
+  public nombre: string;
+  public apellidoP: string;
+  public apellidoM: string;
+  public horasTotales: number;
 }
 
 export class RegistroAsistencia extends ResumenTrabajador {
-  codigoActividad: string;
-  horasTrabajadas: number;
-  fecha: string;
+  public codigoActividad: string;
+  public horasTrabajadas: number;
+  public fecha: string;
 }
 
 export class TrabajadorActividad {
-  codigoProyecto: string;
-  dni: string;
-  codigoActividad: string;
+  public codigoProyecto: string;
+  public dni: string;
+  public codigoActividad: string;
 }
 
 export class ActaPersona {
-  codigoActa: string;
-  dni: string;
-  fecha: string;
+  public codigoActa: string;
+  public dni: string;
+  public fecha: string;
 }
 
 
 export class Persona {
-  dni: string;
-  primerNombre: string;
-  apellidoMaterno: string;
-  apellidoPaterno: string;
-  contrasenia: string;
-  firma: string;
-  direccion: Direccion;
-  telefonos: Telefono [];
-  correos: Correo [];
+  public dni: string;
+  public primerNombre: string;
+  public apellidoMaterno: string;
+  public apellidoPaterno: string;
+  public contrasenia: string;
+  public firma: string;
+  public direccion: Direccion;
+  public telefonos: Telefono [];
+  public correos: Correo [];
 }
 
 export class Practica {
-  codigoPractica: string;
-  descripcion: string;
-  tipoPractica: string;
+  public codigoPractica: string;
+  public descripcion: string;
+  public tipoPractica: string;
 }
 
 export class PracticaActividad {
-  codigoActividad: string;
-  codigoPractica: string;
+  public codigoActividad: string;
+  public codigoPractica: string;
 }
 
 export class ProyectoContacto {
-  codigoProyecto: string;
-  dni: string;
+  public codigoProyecto: string;
+  public dni: string;
 }
 
 export class ProyectoTrabajador {
-  codigoProyecto: string;
-  dni: string;
-  codigoPerfil: string;
+  public codigoProyecto: string;
+  public dni: string;
+  public codigoPerfil: string;
 }
 
 
@@ -214,17 +213,17 @@ export class ProyectoTrabajador {
 
 
 export class Trabajador {
-  dni: string;
-  trabajadorPerfil: Perfil [];
+  public dni: string;
+  public trabajadorPerfil: Perfil [];
 }
 
 export class TrabajadorPerfilActividad {
-  codigo: number;
-  fecha: string;
-  cantidadHoras: number;
-  codigoActividad: string;
-  dni: string;
-  codigoPerfil: string;
+  public codigo: number;
+  public fecha: string;
+  public cantidadHoras: number;
+  public codigoActividad: string;
+  public dni: string;
+  public codigoPerfil: string;
 }
 
 export class Presupuesto {
