@@ -7,4 +7,12 @@ public class Correo {
     private Integer codigoCorreo;
     private String correo;
     private String dni;
+    public Correo (String cor, String dn){
+        correo = cor;
+        dni = dn;
+    }
+
+    public Correo() {
+
+    }
 }

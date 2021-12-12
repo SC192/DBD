@@ -11,4 +11,15 @@ public class Persona {
     private String contrasenia;
     private String firma;
     private Integer codigoDireccion;
+
+    public Persona(String dn, String primerN, String apellidoM, String apellidoP, String cont, String fir) {
+        dni = dn;
+        primerNombre = primerN;
+        apellidoMaterno = apellidoM;
+        apellidoPaterno = apellidoP;
+        contrasenia = cont;
+        firma = fir;
+    }
 }
+
+

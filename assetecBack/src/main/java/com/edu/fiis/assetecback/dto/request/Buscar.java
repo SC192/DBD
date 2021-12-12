@@ -4,5 +4,6 @@ import lombok.Data;
 
 @Data
 public class Buscar {
-    private String Contenido;
+    private String contenido;
+    private Integer contenidoNumerico;
 }
