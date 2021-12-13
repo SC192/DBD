@@ -235,6 +235,7 @@ export class Presupuesto {
 export class Proyecto {
   constructor(public codigoProyecto: string,
               public nombre: string,
+              public descripcion: string,
               public estado: string,
               public fechaFinReal: string,
               public fechaFinEstimada: string,
@@ -246,4 +247,7 @@ export class Proyecto {
               public reportes: Reporte [],
               public alcances: Alcance [],
               public objetivos: Objetivo []) {}
+}
+export class BusquedaProyectoResponse {
+  listaProyecto: Proyecto[];
 }

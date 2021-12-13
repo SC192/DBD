@@ -17,7 +17,8 @@ import {ComprobanteComponent} from './comprobante/comprobante.component';
 import {ActaEstadoComponent} from './ResponderActa/acta-estado.component';
 
 const routes: Routes = [
-  {path: '', component: SigninComponent},
+  {path: '', component: HomeComponent},
+  {path: 'signin', component: SigninComponent},
   {path: 'home', component: HomeComponent},
   {path: 'asistencia', component: AsistenciaComponent},
   {path: 'actividad', component: ActividadComponent},

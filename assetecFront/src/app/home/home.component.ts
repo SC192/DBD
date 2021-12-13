@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {ApiService} from "../apiService";
 import {Router} from "@angular/router";
+import {DataService} from "../services/data.service";
 
 @Component({
   selector: 'app-home',
@@ -9,27 +10,14 @@ import {Router} from "@angular/router";
 })
 export class HomeComponent implements OnInit {
   pagina: string = null;
-  constructor(private apiservice: ApiService, private route: Router) { }
+  constructor(private apiservice: ApiService, private route: Router, public dataService: DataService) { }
 
   ngOnInit(): void {
   }
-  cambiar(): void{
-    if (this.pagina == 'proyecto'){
-      this.route.navigateByUrl('buscadorProyetco');
-    }
-    else if (this.pagina == 'solicitudContacto'){
-      this.route.navigateByUrl('solicitudContacto');
-    }
-    else if (this.pagina == 'solicitudTrabajador'){
-      this.route.navigateByUrl('solicitudTrabajador');
-    }
-    else if (this.pagina == 'signin'){
-      this.route.navigateByUrl('signin');
-    }
-    else if (this.pagina == 'perfil'){
-      this.route.navigateByUrl('perfil');
-    }
-  }
 
+  cerrarSesion(): void{
+    this.dataService.persona = null;
+    this.dataService.contacto = false;
+  }
 
 }
