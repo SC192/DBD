@@ -78,6 +78,7 @@ export class ProyectoComponent implements OnInit {
       }
     }
   }
+  //no funciona no trae nada
   reporteProyecto(): void{
     this.apiservice.reporteFechasProyecto(this.dataService.proyecto).subscribe((data) => {
       this.dataService.reporte = data;
