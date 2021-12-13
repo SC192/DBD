@@ -40,8 +40,8 @@ public class AssetecControlador {
             produces = "application/json;charset=utf-8",
             method =RequestMethod.POST
     )
-    public @ResponseBody List<Proyecto> treaerProyectosUsuario(@RequestBody Persona persona){
-        return assetecServicio.treaerProyectosUsuario(persona);
+    public @ResponseBody List<Proyecto> traerProyectosUsuario(@RequestBody Persona persona){
+        return assetecServicio.traerProyectosUsuario(persona);
     }
 
     @RequestMapping(

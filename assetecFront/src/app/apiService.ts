@@ -1,15 +1,15 @@
-import { Injectable } from "@angular/core";
+import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import { Observable, throwError } from "rxjs";
+import { Observable, throwError } from 'rxjs';
 import { retry, catchError} from 'rxjs/operators';
-import { Proyecto } from './model';
+import {BusquedaProyectoResponse, Persona, Proyecto} from './model';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
-  baseurl = 'http://127.0.0.1:8080/';
+  baseurl = 'http://127.0.0.1:8090/';
   // TODO: Falta averiguar si es el mismo o cambio la base url.
   httpOptions = {
     headers: new HttpHeaders({
@@ -30,12 +30,18 @@ export class ApiService {
 
   constructor(private http: HttpClient) {  }
 
-  // Ejemplo ilustrativo, no tiene sentido lo escrito, solo es para saber estructura.
-  iniciarSesion(data: Proyecto): Observable<Proyecto> {
-    return this.http.post<Proyecto>(this.baseurl + 'iniciar-sesion', data, this.httpOptions)
-    .pipe(
-      retry(1),
-      catchError(this.errorHandl)
-    );
+  traerProyectosUsuario(data: Persona): Observable<Proyecto[]> {
+    return this.http.post<Proyecto[]>(this.baseurl + 'traer-proyectos-usuario', data, this.httpOptions)
+      .pipe(
+        retry(1),
+        catchError(this.errorHandl)
+      );
+  }
+  esCliente(data: Persona): Observable<boolean> {
+    return this.http.post<boolean>(this.baseurl + 'trabajador', data, this.httpOptions)
+      .pipe(
+        retry(1),
+        catchError(this.errorHandl)
+      );
   }
 }

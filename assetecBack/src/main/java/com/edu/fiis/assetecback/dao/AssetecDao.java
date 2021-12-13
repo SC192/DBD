@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface AssetecDao {
     public void crearActa(RegistroActa registroActa);
-    List<Proyecto> treaerProyectosUsuario(Persona persona);
+    List<Proyecto> traerProyectosUsuario(Persona persona);
     List<Alcance> obtenerAlcancesProyecto(Proyecto proyecto);
     void aceptarActa(RespuestaCliente respuestaCliente);
     List<Actividad> obtenerActividadesProyecto(Proyecto proyecto);

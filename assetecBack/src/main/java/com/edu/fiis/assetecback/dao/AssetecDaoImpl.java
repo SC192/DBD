@@ -48,7 +48,7 @@ public class AssetecDaoImpl implements AssetecDao{
         return ans;
     }
 
-    public List<Proyecto> treaerProyectosUsuario(Persona persona){
+    public List<Proyecto> traerProyectosUsuario(Persona persona){
         List<Proyecto> proyectos = new ArrayList<>();
         String adicional;
         if(esCliente(persona)) {
