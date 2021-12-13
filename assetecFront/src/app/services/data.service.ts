@@ -25,4 +25,5 @@ export class DataService {
   reporte: string = null;
   datos: string [] = [];
   gastos: string [] = [];
+  public proyectos: Proyecto [] = [];
 }
