@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import {ApiService} from '../apiService';
+import {DataService} from '../services/data.service';
 
 @Component({
   selector: 'app-resultados',
@@ -7,9 +9,23 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ResultadosComponent implements OnInit {
 
-  constructor() { }
+  constructor(private apiservice: ApiService, public dataService: DataService) { }
 
   ngOnInit(): void {
   }
-
+  cerrarSesion(): void{
+    this.dataService.persona = {
+      dni : '54684528',
+      primerNombre: null,
+      apellidoMaterno: null,
+      apellidoPaterno: null,
+      contrasenia: null,
+      firma: null,
+      direccion: null,
+      telefonos: null,
+      correos: null,
+      rol: 'GERENTE DE PROYECTOS'
+    };
+    this.dataService.contacto = false;
+  }
 }

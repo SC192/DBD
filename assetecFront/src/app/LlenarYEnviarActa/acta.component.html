@@ -10,7 +10,7 @@
             <ul>
               <li class="current-list-item"><a routerLink="/home">Home</a></li>
               <li><a routerLink="/buscador">Proyectos</a></li>
-              <li><a >Solicitudes</a>
+              <li><a *ngIf="dataService.contacto == false">Solicitudes</a>
                 <ul class="sub-menu">
                   <li><a routerLink="/solicitudT">Trabajadores</a></li>
                   <li><a routerLink="/solicitudC">Contactos</a></li>
@@ -19,7 +19,7 @@
               <li><a class="mobile-hide" ><i class="fas fa-user"></i></a>
                 <ul class="sub-menu" href="#">
                   <li><a routerLink="/perfil">Modificar Perfil</a></li>
-                  <li><a routerLink="">Cerrar Sesion</a></li>
+                  <li><a (click)="cerrarSesion()" routerLink="">Cerrar Sesion</a></li>
                 </ul>
               </li>
             </ul>
@@ -50,42 +50,22 @@
 <div class="cart-section mt-150 mb-150">
   <div class="container">
     <h3 id="head"><span class="orange-text">Acta</span> de Conformidad</h3>
-    <h4>Proyecto</h4>
+    <h4>{{dataService.proyecto.nombre}}</h4>
     <div class="row">
       <div class="col-lg-8 col-md-12">
         <div class="cart-table-wrap">
           <div class="row product-lists">
             <div class="col-lg-12 col-md-6  ">
-              <div class="single-product-item d-flex">
+              <div *ngFor="let item of listaAcuerdos; let i = index" class="single-product-item d-flex">
                 <div class="acuerdo">
-                  <h3>Acuerdo #</h3>
-                  <p class="product-price"> <span>Descripcion</span> </p>
+                  <h3>Acuerdo {{i}}</h3>
+                  <p class="product-price"> <span>{{item}}</span> </p>
                 </div>
                 <div class="opciones align-items-center">
-                  <a ><i class="far fa-check-square"></i></a>
-                  <a ><i class="far fa-window-close"></i></a>
+                  <a ><i class="far fa-window-close" (click)="eliminarAcuerdo(i)"></i></a>
                 </div>
               </div>
-              <div class="single-product-item d-flex">
-                <div class="acuerdo">
-                  <h3>Acuerdo #</h3>
-                  <p class="product-price"> <span>Descripcion</span> </p>
-                </div>
-                <div class="opciones align-items-center">
-                  <a ><i class="far fa-check-square"></i></a>
-                  <a ><i class="far fa-window-close"></i></a>
-                </div>
-              </div>
-              <div class="single-product-item d-flex">
-                <div class="acuerdo">
-                  <h3>Acuerdo #</h3>
-                  <p class="product-price"> <span>Descripcion</span> </p>
-                </div>
-                <div class="opciones align-items-center">
-                  <a ><i class="far fa-check-square"></i></a>
-                  <a ><i class="far fa-window-close"></i></a>
-                </div>
-              </div>
+
             </div>
           </div>
         </div>
@@ -97,7 +77,7 @@
             <div class="card single-accordion">
               <div class="card-header" >
                 <h5 class="mb-0">
-                  <button class="btn btn-link" type="button" >
+                  <button class="btn btn-link" type="button" (click)="listaAcuerdos[listaAcuerdos.length] = acuerdo">
                     Agregar nuevo acuerdo
                   </button>
                 </h5>
@@ -106,7 +86,7 @@
                 <div class="card-body">
                   <div class="billing-address-form">
                     <form action="index.html">
-                      <p><textarea name="bill" id="bill" cols="30" rows="10" placeholder="Say Something"></textarea></p>
+                      <p><textarea name="bill" id="bill" cols="30" rows="10" placeholder="Say Something" [(ngModel)]="acuerdo"></textarea></p>
                     </form>
                   </div>
                 </div>
@@ -116,7 +96,7 @@
           </div>
         </div>
         <div class="cart-buttons">
-          <p><input type="submit" value="Enviar Acta"></p>
+          <p><input type="submit" value="Enviar Acta" (click)="acta.codigoProyecto = dataService.proyecto.codigoProyecto; acta.acuerdos = listaAcuerdos; enviarActa()"></p>
         </div>
       </div>
     </div>

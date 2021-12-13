@@ -8,6 +8,8 @@ export class Moneda {
 
 export class Rol {
   constructor(public cantidad: number,
+              public nombrePerfil: string,
+              public costoPerfil: number,
               public totalHoras: number,
               public costoHora: number) {}
 }
@@ -73,6 +75,8 @@ export class Actividad {
               public gasto: Gasto,
               public cantidadHoras: number,
               public posicion: number,
+              public posicionF: number,
+              public codActividadPadre: string,
               public actividadesHijas: Actividad [],
               public objetivos: ObjetivoActividad []) {}
 }
@@ -117,21 +121,22 @@ export class Gasto {
 
 export class Cliente {
   constructor(public ruc: string,
-              public razonSocial: string,
-              public contactos: Persona []) {}
+              public razonSocial: string) {}
 }
 
 export class Objetivo {
   constructor(public posicion: number,
               public descripcion: string,
-              public objetivosHijos: Objetivo) {}
+              public posicionPadre: number,
+              public posicionF: number,
+              public objetivosHijos: Objetivo []) {}
 }
 
 export class Reporte {
-  constructor(public numeroReporte: number,
-              public fecha: string,
-              public descripcion: string,
-              public tipo: TipoReporte) {}
+  public numeroReporte: number;
+  public fecha: string;
+  public descripcion: string;
+  public tipo: TipoReporte;
 }
 export class ObjetivoActividad {
   constructor(public codigoObjetivoActividad: string,
@@ -181,6 +186,7 @@ export class Persona {
   public apellidoPaterno: string;
   public contrasenia: string;
   public firma: string;
+  public rol: string;
   public direccion: Direccion;
   public telefonos: Telefono [];
   public correos: Correo [];
@@ -248,6 +254,10 @@ export class Proyecto {
               public alcances: Alcance [],
               public objetivos: Objetivo []) {}
 }
-export class BusquedaProyectoResponse {
-  listaProyecto: Proyecto[];
+export class RegistroActa{
+  constructor(
+    public acuerdos: string [],
+    public codigoProyecto: string,
+  ) {
+  }
 }
