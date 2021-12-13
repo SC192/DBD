@@ -2,6 +2,7 @@ package com.edu.fiis.assetecback.servicio;
 
 import com.edu.fiis.assetecback.dto.*;
 import com.edu.fiis.assetecback.dto.request.*;
+import com.edu.fiis.assetecback.dto.responses.ProyectoDetallado;
 import com.edu.fiis.assetecback.dto.responses.ReporteResponse;
 import com.edu.fiis.assetecback.dto.responses.ResumenTrabajador;
 import com.edu.fiis.assetecback.dto.responses.Rol;
@@ -10,7 +11,7 @@ import java.util.List;
 
 public interface AssetecServicio {
     void crearActa(RegistroActa registroActa);
-    List<Proyecto> traerProyectosUsuario(Persona persona);
+    List<ProyectoDetallado> traerProyectosUsuario(Persona persona);
     List<Alcance> obtenerAlcancesProyecto(Proyecto proyecto);
     void aceptarActa(RespuestaCliente respuestaCliente);
     List<Actividad> obtenerActividadesProyecto(Proyecto proyecto);

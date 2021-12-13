@@ -2,6 +2,7 @@ package com.edu.fiis.assetecback.dao;
 
 import com.edu.fiis.assetecback.dto.*;
 import com.edu.fiis.assetecback.dto.request.*;
+import com.edu.fiis.assetecback.dto.responses.ProyectoDetallado;
 import com.edu.fiis.assetecback.dto.responses.ReporteResponse;
 import com.edu.fiis.assetecback.dto.responses.ResumenTrabajador;
 import com.edu.fiis.assetecback.dto.responses.Rol;
@@ -36,7 +37,7 @@ public class AssetecDaoImpl implements AssetecDao{
             ps.setString(1, persona.getDni());
 
             ResultSet rs = ps.executeQuery();
-            while(rs.next()) {
+            if(rs.next()) {
                 ans = rs.getBoolean("exists");
             }
             rs.close();
@@ -48,8 +49,68 @@ public class AssetecDaoImpl implements AssetecDao{
         return ans;
     }
 
-    public List<Proyecto> traerProyectosUsuario(Persona persona){
-        List<Proyecto> proyectos = new ArrayList<>();
+    private Persona traerEncargadoProyecto(Proyecto proyecto) {
+        Persona persona = new Persona();
+        String sql = "select dni_trab, primer_nombre_trab, apellido_m_trab, apellido_p_trab\n" +
+                "from proyecto_trabajador_v\n" +
+                "where cod_proyecto = ? and cod_perfil = 'JP'";
+        try {
+            Connection con = jdbcTemplate.getDataSource().getConnection();
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setString(1, proyecto.getCodigoProyecto());
+
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()) {
+                persona.setDni(rs.getString("dni_trab"));
+                persona.setPrimerNombre(rs.getString("primer_nombre_trab"));
+                persona.setApellidoMaterno(rs.getString("apellido_m_trab"));
+                persona.setApellidoPaterno(rs.getString("apellido_p_trab"));
+            }
+
+            rs.close();
+            ps.close();
+            con.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return persona;
+    }
+
+    private Persona traerClienteProyecto(Proyecto proyecto) {
+        Persona persona = new Persona();
+        String sql = "select pe.dni, pe.primer_nombre, pe.apellido_m, pe.apellido_p\n" +
+                "from proyecto p \n" +
+                "inner join proyecto_cliente pc \n" +
+                "  on p.cod_proyecto = pc.cod_proyecto\n" +
+                "inner join contacto c\n" +
+                "  on c.dni = pc.dni\n" +
+                "inner join persona pe\n" +
+                "  on c.dni = pe.dni\n" +
+                "where p.cod_proyecto = ?";
+        try {
+            Connection con = jdbcTemplate.getDataSource().getConnection();
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setString(1, proyecto.getCodigoProyecto());
+
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()) {
+                persona.setDni(rs.getString("dni"));
+                persona.setPrimerNombre(rs.getString("primer_nombre"));
+                persona.setApellidoMaterno(rs.getString("apellido_m"));
+                persona.setApellidoPaterno(rs.getString("apellido_p"));
+            }
+
+            rs.close();
+            ps.close();
+            con.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return persona;
+    }
+
+    public List<ProyectoDetallado> traerProyectosUsuario(Persona persona){
+        List<ProyectoDetallado> proyectos = new ArrayList<>();
         String adicional;
         if(esCliente(persona)) {
             adicional = " from proyecto p " +
@@ -81,16 +142,21 @@ public class AssetecDaoImpl implements AssetecDao{
 
             ResultSet rs = ps.executeQuery();
             while(rs.next()) {
-                Proyecto proyecto = new Proyecto();
-                proyecto.setCodigoProyecto(rs.getString("COD_PROYECTO"));
-                proyecto.setEstado(rs.getString("ESTADO"));
-                proyecto.setNombre(rs.getString("NOMBRE"));
-                proyecto.setDescripcion(rs.getString("DESCRIPCION"));
-                proyecto.setFechaFinReal(rs.getString("FECHA_FIN_REAL"));
-                proyecto.setFechaFinEstimada(rs.getString("FECHA_FIN_EST"));
-                proyecto.setFechaInicioReal(rs.getString("FECHA_INICIO_REAL"));
-                proyecto.setFechaInicioEstimada(rs.getString("FECHA_INICIO_EST"));
-                proyectos.add(proyecto);
+                ProyectoDetallado pd = new ProyectoDetallado();
+                Proyecto p = new Proyecto();
+                p.setCodigoProyecto(rs.getString("COD_PROYECTO"));
+                p.setEstado(rs.getString("ESTADO"));
+                p.setNombre(rs.getString("NOMBRE"));
+                p.setDescripcion(rs.getString("DESCRIPCION"));
+                p.setFechaFinReal(rs.getString("FECHA_FIN_REAL"));
+                p.setFechaFinEstimada(rs.getString("FECHA_FIN_EST"));
+                p.setFechaInicioReal(rs.getString("FECHA_INICIO_REAL"));
+                p.setFechaInicioEstimada(rs.getString("FECHA_INICIO_EST"));
+
+                pd.setProyecto(p);
+                pd.setEncargado(traerEncargadoProyecto(pd.getProyecto()));
+                pd.setCliente(traerClienteProyecto(pd.getProyecto()));
+                proyectos.add(pd);
             }
             rs.close();
             ps.close();

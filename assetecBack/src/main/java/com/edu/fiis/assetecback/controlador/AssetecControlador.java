@@ -1,6 +1,7 @@
 package com.edu.fiis.assetecback.controlador;
 
 import com.edu.fiis.assetecback.dto.request.*;
+import com.edu.fiis.assetecback.dto.responses.ProyectoDetallado;
 import com.edu.fiis.assetecback.dto.responses.ReporteResponse;
 import com.edu.fiis.assetecback.dto.responses.ResumenTrabajador;
 import com.edu.fiis.assetecback.dto.responses.Rol;
@@ -40,7 +41,7 @@ public class AssetecControlador {
             produces = "application/json;charset=utf-8",
             method =RequestMethod.POST
     )
-    public @ResponseBody List<Proyecto> traerProyectosUsuario(@RequestBody Persona persona){
+    public @ResponseBody List<ProyectoDetallado> traerProyectosUsuario(@RequestBody Persona persona){
         return assetecServicio.traerProyectosUsuario(persona);
     }
 

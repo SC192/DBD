@@ -3,6 +3,7 @@ package com.edu.fiis.assetecback.servicio;
 import com.edu.fiis.assetecback.dao.AssetecDao;
 import com.edu.fiis.assetecback.dto.*;
 import com.edu.fiis.assetecback.dto.request.*;
+import com.edu.fiis.assetecback.dto.responses.ProyectoDetallado;
 import com.edu.fiis.assetecback.dto.responses.ReporteResponse;
 import com.edu.fiis.assetecback.dto.responses.ResumenTrabajador;
 import com.edu.fiis.assetecback.dto.responses.Rol;
@@ -22,7 +23,7 @@ public class AssetecServicioImpl implements AssetecServicio{
         dao.crearActa(registroActa);
     }
 
-    public List<Proyecto> traerProyectosUsuario(Persona persona) {
+    public List<ProyectoDetallado> traerProyectosUsuario(Persona persona) {
         return dao.traerProyectosUsuario(persona);
     }
 
