@@ -50,35 +50,35 @@
 <!-- products -->
 <div class="product-section mt-150 mb-150"  >
   <div class="container">
-
     <div class="row">
       <div class="col-md-12">
         <div class="product-filters">
           <ul>
-            <li class="active" (click)="buscar()">Todos</li>
-            <li (click)="buscar()">En Proceso</li>
-            <li (click)="buscar()">Finalizado</li>
+            <li class="active" (click)="filtro = '*'; buscar()">Todos</li>
+            <li (click)="filtro = 'PROCESO'; buscar()">En Proceso</li>
+            <li (click)="filtro = 'FINALIZADO'; buscar()">Finalizado</li>
+            <li (click)="filtro = 'EN ESPERA'; buscar()">En Espera</li>
           </ul>
         </div>
       </div>
     </div>
     <div *ngIf="filtro == '*'" class="row product-lists">
-      <div *ngFor="let item of proyectos;" class="col-lg-4 col-md-6 text-center">
+      <div *ngFor="let item of dataService.proyectos; let i = index" class="col-lg-4 col-md-6 text-center ">
         <div class="single-product-item">
           <p class="product-price">{{item.nombre}} <span>{{item.estado}}</span> </p>
           <h3>{{item.descripcion}}</h3>
-          <a routerLink="/proyecto" class="cart-btn"><i class="fas fa-info"></i> Mas informacion</a>
+          <a (click)="infoProyecto(i); listaAlcances(); listaObjetivos(); asociarObjetivos()" routerLink="/proyecto" class="cart-btn"><i class="fas fa-info"></i> Mas informacion</a>
         </div>
       </div>
     </div>
 
     <div *ngIf="filtro != '*'" class="row product-lists">
-      <div *ngFor="let item of proyectos;" >
-        <div *ngIf="item.estado == filtro" class="col-lg-4 col-md-6 text-center">
+      <div *ngFor="let item of dataService.proyectos; let i = index" class="filtrado">
+        <div *ngIf="item.estado == filtro" class="col-lg-4 col-md-6 text-center resultado">
           <div class="single-product-item">
             <p class="product-price">{{item.nombre}} <span>{{item.estado}}</span> </p>
             <h3>{{item.descripcion}}</h3>
-            <a (click)="infoProyecto(item.codigoProyecto)" class="cart-btn"><i class="fas fa-info"></i> Mas informacion</a>
+            <a (click)="infoProyecto(i); listaAlcances(); listaObjetivos(); asociarObjetivos()" routerLink="/proyecto" class="cart-btn"><i class="fas fa-info"></i> Mas informacion</a>
           </div>
         </div>
       </div>

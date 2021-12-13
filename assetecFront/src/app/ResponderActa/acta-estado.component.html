@@ -140,6 +140,9 @@
             </div>
           </div>
         </div>
+        <div class="cart-buttons">
+          <p><input type="submit" *ngIf="(dataService.persona.rol == 'GERENTE DE PROYECTOS' || dataService.persona.rol == 'JEFE DE PROYECTOS' || dataService.persona.rol == 'LIDER USUARIO')" value="Generar Firma"></p>  <!--*ngIf="dataService.acciones == 'enviado' && -->
+        </div>
       </div>
     </div>
   </div>

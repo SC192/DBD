@@ -9,8 +9,8 @@
           <nav class="main-menu">
             <ul>
               <li class="current-list-item"><a routerLink="/home">Home</a></li>
-              <li><a routerLink="/buscador">Proyectos</a></li>
-              <li><a >Solicitudes</a>
+              <li><a (click)="buscar()" routerLink="/buscador">Proyectos</a></li>
+              <li><a *ngIf="dataService.contacto == false">Solicitudes</a>
                 <ul class="sub-menu">
                   <li><a routerLink="/solicitudT">Trabajadores</a></li>
                   <li><a routerLink="/solicitudC">Contactos</a></li>
@@ -19,7 +19,7 @@
               <li><a class="mobile-hide" ><i class="fas fa-user"></i></a>
                 <ul class="sub-menu" >
                   <li><a routerLink="/perfil">Modificar Perfil</a></li>
-                  <li><a routerLink="">Cerrar Sesion</a></li>
+                  <li><a (click)="cerrarSesion()" routerLink="">Cerrar Sesion</a></li>
                 </ul>
               </li>
             </ul>
@@ -39,7 +39,7 @@
       <div class="col-lg-8 offset-lg-2 text-center">
         <div class="breadcrumb-text">
           <p>Proyecto</p>
-          <h1>Nombre</h1>
+          <h1>{{this.dataService.proyecto.nombre}}</h1>
         </div>
       </div>
     </div>
@@ -53,49 +53,54 @@
 
       <!--Content Column-->
       <div class="content-column col-lg-8">
-        <p class="top-sub">Estado</p>
-        <h3><span class="orange-text">Proyecto</span> Nombre</h3>
+        <p class="top-sub">{{this.dataService.proyecto.estado}}</p>
+        <h3><span class="orange-text">Proyecto</span> {{this.dataService.proyecto.nombre}}</h3>
         <h4>Empresa</h4>
         <p class="blog-meta">
           <span class="author"><i class="fas fa-user"></i> Encargado</span>
           <span class="date"><i class="fas fa-user"></i> Contacto</span>
         </p>
-        <div class="text">Descripcion</div>
+        <div class="text">{{this.dataService.proyecto.descripcion}}</div>
+
+        <div class="text"><h4>Alcances:</h4></div>
+        <div class="text" *ngFor="let item of dataService.proyecto.alcances">{{item.alcance}}</div>
+        <div class="text"><h4>Objetivos:</h4></div>
+        <div class="text" *ngFor="let item of dataService.proyecto.objetivos"><span>{{item.posicionF}}</span> {{item.descripcion}}</div>
         <!--Countdown Timer-->
-        <div class="time-counter"><div class="time-countdown clearfix" ><div class="counter-column"><div class="inner"><span class="count">FechaInicio</span>Fecha Inicio</div></div> <div class="counter-column"><div class="inner"><span class="count">FechaFin</span>Fecha Fin</div></div>  </div></div>
-        <a  class="cart-btn mt-3"><i class="fas fa-list"></i> Lista Actividades</a>
-        <a class="cart-btn mt-3"><i class="fas fa-users"></i> Lista Trabajadores</a>
+        <div class="time-counter"><div class="time-countdown clearfix" ><div class="counter-column"><div class="inner"><span class="count">{{this.dataService.proyecto.fechaInicioEstimada}}</span>Fecha Inicio</div></div> <div class="counter-column"><div class="inner"><span class="count">{{this.dataService.proyecto.fechaFinEstimada}}</span>Fecha Fin</div></div>  </div></div>
+        <a  class="cart-btn mt-3" (click)="lista = 'actividades'; listaActividades(); asociarActividades()"><i class="fas fa-list"></i> Lista Actividades</a>
+        <a class="cart-btn mt-3" (click)="lista = 'trabajadores'; listaRoles(); calcular()"><i class="fas fa-users"></i> Lista Trabajadores</a>
       </div>
       <!--Image Column-->
       <div class="col-lg-4">
         <div class="total-section">
           <!--Tabla Actividades-->
-          <table class="total-table">
+          <table *ngIf="lista == 'actividades'" class="total-table">
             <thead class="total-table-head">
             <tr class="table-total-row">
               <th>Actividades</th>
             </tr>
             </thead>
             <tbody>
-            <tr class="total-data">
-              <td ><a routerLink="/actividad"><div><div id="actividad"><strong>Actividad ############# ############# ######## ########## ########### ###### </strong></div><div id="estado">Estado</div></div></a></td>
-            </tr>
-            <tr class="total-data">
-              <td><strong>Shipping: </strong></td>
-            </tr>
-            <tr class="total-data">
-              <td><strong>Total: </strong></td>
+            <tr class="total-data" *ngFor="let item of dataService.proyecto.actividades; let i = index" >
+              <td><a (click)="infoActividad(this.i)" routerLink="/actividad"><div>
+                <div class="posicionF">{{item.posicionF}}</div>
+                <div id="actividad"><strong>{{item.nombre}}</strong></div>
+                <div *ngIf="item.fechaInicioReal == null" class="estado">INICIO</div>
+                <div *ngIf="item.fechaInicioReal != null && item.fechaFinReal == null" class="estado">PROCESO</div>
+                <div *ngIf="item.fechaFinReal != null"class="estado">FIN</div>
+              </div></a></td>
             </tr>
             </tbody>
           </table>
           <!--Tabla Roles-->
-          <table class="total-table">
+          <table *ngIf="lista == 'trabajadores'" class="total-table">
             <thead class="total-table-head">
             <tr class="table-total-row">
               <th>Roles</th>
               <th></th>
-              <th></th>
-              <th>$$</th>
+              <th>S/</th>
+              <th>{{costoTotal}}</th>
             </tr>
             </thead>
             <tbody>
@@ -105,22 +110,20 @@
               <td>Horas</td>
               <td>Costo</td>
             </tr>
-            <tr class="total-data">
-              <td><strong>Shipping: </strong></td>
-              <td>$45</td>
-            </tr>
-            <tr class="total-data">
-              <td><strong>Total: </strong></td>
-              <td>$545</td>
+            <tr *ngFor="let item of roles" class="total-data">
+              <td><strong>{{item.nombrePerfil}} </strong></td>
+              <td>{{item.cantidad}}</td>
+              <td>{{item.costoHora}}</td>
+              <td>{{item.costoPerfil}}</td>
             </tr>
             </tbody>
           </table>
 
           <div class="cart-buttons">
-            <p><input type="submit" value="Generar Cierre"></p>
-            <p><input type="submit" routerLink="/resultados" value="Generar Resultados"></p>
-            <p><input type="submit" routerLink="/acta" value="Generar Acta"></p>
-            <p><input type="submit" value="Generar Firma"></p>
+            <p><input type="submit" *ngIf="(dataService.persona.rol == 'GERENTE DE PROYECTOS' || dataService.persona.rol == 'JEFE DE PROYECTOS')" value="Generar Cierre"></p>  <!--Agregar dataService.proyecto.fechaFinReal != null &&-->
+            <p><input type="submit" *ngIf="dataService.persona.rol == 'GERENTE DE PROYECTOS' || dataService.persona.rol == 'LIDER USUARIO'" (click)="reporteProyecto(); reporteActividades(); reporteGastos()" routerLink="/resultados" value="Generar Resultados"></p>
+            <p><input type="submit"  *ngIf="(dataService.persona.rol == 'GERENTE DE PROYECTOS' || dataService.persona.rol == 'JEFE DE PROYECTOS')" routerLink="/acta" value="Generar Acta"></p> <!--Agregar dataService.acciones == 'cierre' && -->
+            <p><input type="submit" *ngIf="(dataService.persona.rol == 'GERENTE DE PROYECTOS' || dataService.persona.rol == 'JEFE DE PROYECTOS')" routerLink="/actaEstado" value="Acta"></p> <!--*ngIf="dataService.acciones == 'enviado' &&  -->
           </div>
         </div>
 

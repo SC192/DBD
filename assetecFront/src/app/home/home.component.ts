@@ -19,5 +19,10 @@ export class HomeComponent implements OnInit {
     this.dataService.persona = null;
     this.dataService.contacto = false;
   }
+  buscar(): void{
+    this.apiservice.traerProyectosUsuario(this.dataService.persona).subscribe((data) => {
+      this.dataService.proyectos = data;
+    });
+  }
 
 }

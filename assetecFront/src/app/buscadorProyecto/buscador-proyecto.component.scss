@@ -24,7 +24,9 @@ ul.sub-menu li:hover a {
   color: #F28123 !important;
 }
 .single-product-item{
-  padding-top: 50px;
+  padding: 50px;
+  height: 400px;
+  width: 403px;
 }
 .pagination-wrap ul li a{
   font-weight: 650;
@@ -41,3 +43,11 @@ ul.sub-menu li:hover a {
 p.product-price span{
   font-size: 13px;
 }
+.filtrado{
+  width: 440px;
+}
+.resultado{
+  margin-left: 0;
+  padding-left: 0;
+}
+
