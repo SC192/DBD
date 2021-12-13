@@ -1,9 +1,7 @@
 package com.edu.fiis.assetecback.controlador;
 
 import com.edu.fiis.assetecback.dto.request.*;
-import com.edu.fiis.assetecback.dto.responses.ReporteResponse;
-import com.edu.fiis.assetecback.dto.responses.ResumenTrabajador;
-import com.edu.fiis.assetecback.dto.responses.Rol;
+import com.edu.fiis.assetecback.dto.responses.*;
 import com.edu.fiis.assetecback.servicio.AssetecServicio;
 import com.edu.fiis.assetecback.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +14,135 @@ import java.util.List;
 public class AssetecControlador {
     @Autowired
     private AssetecServicio assetecServicio;
+
+    /**Registro del usuario*/ /**Crear cuenta*/
+    @RequestMapping(
+            value = "/enviar-solicitud-registro",
+            produces = "application/json;charset=utf-8",
+            method =RequestMethod.POST
+    )
+    public @ResponseBody void enviarSolicitudRegistro (@RequestBody SolicitudRegistro solicitudRegistro){
+        assetecServicio.enviarSolicitudRegistro(solicitudRegistro);
+    };
+    /**Registro del usuario*/ /**Revisar Solicitud*/
+    @RequestMapping(
+            value = "/traer-solicitudes-interno",
+            produces = "application/json;charset=utf-8",
+            method =RequestMethod.POST
+    )
+    public @ResponseBody List<SolicitudInterno> traerSolicitudesInterno(@RequestBody Buscar buscar){
+        return assetecServicio.traerSolicitudesInterno(buscar);
+    };
+    @RequestMapping(
+            value = "/traer-solicitudes-externo",
+            produces = "application/json;charset=utf-8",
+            method =RequestMethod.POST
+    )
+    public @ResponseBody List<SolicitudExterno> traerSolicitudesExterno(@RequestBody Buscar buscar){
+        return assetecServicio.traerSolicitudesExterno(buscar);
+    };
+    @RequestMapping(
+            value = "/responder-solicitud-interno",
+            produces = "application/json;charset=utf-8",
+            method =RequestMethod.POST
+    )
+    public @ResponseBody void responderSolicitudInterno (@RequestBody SolicitudInternoRespuesta solicitudInternoRespuesta){
+        assetecServicio.responderSolicitudInterno(solicitudInternoRespuesta);
+    };
+    @RequestMapping(
+            value = "/responder-solicitud-externo",
+            produces = "application/json;charset=utf-8",
+            method =RequestMethod.POST
+    )
+    public @ResponseBody void responderSolicitudExterno (@RequestBody SolicitudExternoRespuesta solicitudExternoRespuesta){
+        assetecServicio.responderSolicitudExterno(solicitudExternoRespuesta);
+    };
+    /**Registro del usuario*/ /**Modificar Numeros*/
+    @RequestMapping(
+            value = "/traer-telefonos",
+            produces = "application/json;charset=utf-8",
+            method =RequestMethod.POST
+    )
+    public @ResponseBody List<Telefono> traerTelefonos (@RequestBody Buscar buscar){
+        return assetecServicio.traerTelefonos(buscar);
+    };
+    @RequestMapping(
+            value = "/agregar-numero",
+            produces = "application/json;charset=utf-8",
+            method =RequestMethod.POST
+    )
+    public @ResponseBody void agregarNumero(@RequestBody Telefono telefono){
+        assetecServicio.agregarNumero(telefono);
+    };
+    @RequestMapping(
+            value = "/quitar-numero",
+            produces = "application/json;charset=utf-8",
+            method =RequestMethod.POST
+    )
+    public @ResponseBody void quitarNumero(@RequestBody Telefono telefono){
+        assetecServicio.quitarNumero(telefono);
+    };
+    /**Registro del usuario*/ /**Modificar Correos*/
+    @RequestMapping(
+            value = "/traer-correo",
+            produces = "application/json;charset=utf-8",
+            method =RequestMethod.POST
+    )
+    public @ResponseBody List<Correo> traerCorreos (@RequestBody Buscar buscar){
+        return assetecServicio.traerCorreos(buscar);
+    };
+    @RequestMapping(
+            value = "/agregar-correo-electronico",
+            produces = "application/json;charset=utf-8",
+            method =RequestMethod.POST
+    )
+    public @ResponseBody void agregarCorreoElectronico(@RequestBody Correo correo){
+        assetecServicio.agregarCorreoElectronico(correo);
+    };
+    @RequestMapping(
+            value = "/quitar-correo-electronico",
+            produces = "application/json;charset=utf-8",
+            method =RequestMethod.POST
+    )
+    public @ResponseBody void quitarCorreoElectronico(@RequestBody Correo correo){
+        assetecServicio.quitarCorreoElectronico(correo);
+    };
+    /**Ingreso del usuario*/ /**Ingresar*/
+    @RequestMapping(
+            value = "/ingresar-cuenta",
+            produces = "application/json;charset=utf-8",
+            method =RequestMethod.POST
+    )
+    public @ResponseBody Persona ingresarCuenta (@RequestBody Persona persona){
+        return assetecServicio.ingresarCuenta(persona);
+    };
+    /**Modificar detalles del rol*/ /**Asignar Perfil*/
+    @RequestMapping(
+            value = "/traer-trabajador-perfiles",
+            produces = "application/json;charset=utf-8",
+            method =RequestMethod.POST
+    )
+    public List<TrabajadorPerfilNombre> traerTrabajadorPerfiles (@RequestBody Buscar buscar){
+        return assetecServicio.traerTrabajadorPerfiles(buscar);
+    };
+    @RequestMapping(
+            value = "/agregar-trabajador-perfil",
+            produces = "application/json;charset=utf-8",
+            method =RequestMethod.POST
+    )
+    public @ResponseBody void agregarTrabajadorPerfil(@RequestBody TrabajadorPerfilNombre trabajadorPerfilNombre){
+        assetecServicio.agregarTrabajadorPerfil(trabajadorPerfilNombre);
+    };
+    @RequestMapping(
+            value = "/quitar-trabajador-perfil",
+            produces = "application/json;charset=utf-8",
+            method =RequestMethod.POST
+    )
+    public @ResponseBody void quitarTrabajadorPerfil(@RequestBody TrabajadorPerfilNombre trabajadorPerfilNombre){
+        assetecServicio.quitarTrabajadorPerfil(trabajadorPerfilNombre);
+    };
+
+
 
     @RequestMapping(
             value = "/iniciar-sesion",
@@ -40,7 +167,7 @@ public class AssetecControlador {
             produces = "application/json;charset=utf-8",
             method =RequestMethod.POST
     )
-    public @ResponseBody List<Proyecto> traerProyectosUsuario(@RequestBody Persona persona){
+    public @ResponseBody List<ProyectoDetallado> traerProyectosUsuario(@RequestBody Persona persona){
         return assetecServicio.traerProyectosUsuario(persona);
     }
 

@@ -1,9 +1,7 @@
 package com.edu.fiis.assetecback.dao;
 
 import com.edu.fiis.assetecback.dto.*;
-import com.edu.fiis.assetecback.dto.request.Buscar;
-import com.edu.fiis.assetecback.dto.request.SolicitudRegistro;
-import com.edu.fiis.assetecback.dto.request.SolicitudRespuesta;
+import com.edu.fiis.assetecback.dto.request.*;
 import com.edu.fiis.assetecback.dto.responses.SolicitudExterno;
 import com.edu.fiis.assetecback.dto.responses.SolicitudInterno;
 import com.edu.fiis.assetecback.dto.responses.TrabajadorPerfilNombre;
@@ -20,9 +18,65 @@ public class AssetecDaoImpl2 implements AssetecDao2 {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    /**Registro del usuario*/ /**Crear cuenta*/
+    public void enviarSolicitudRegistro (SolicitudRegistro solicitudRegistro){
+        Buscar buscar = new Buscar();
+        buscar.setContenido(solicitudRegistro.getDni());
+        Direccion direccion = new Direccion(solicitudRegistro.getCodPostal(), solicitudRegistro.getDireccion(), solicitudRegistro.getUnidad(), solicitudRegistro.getDistrito(), solicitudRegistro.getProvincia(), solicitudRegistro.getPais());
+        Persona persona = new Persona(solicitudRegistro.getDni(), solicitudRegistro.getNombres(), solicitudRegistro.getApellidoM(), solicitudRegistro.getApellidoP(), solicitudRegistro.getContrasenia(), solicitudRegistro.getFirma());
+        Telefono telefono = new Telefono(solicitudRegistro.getCelular(), solicitudRegistro.getPrefijo(), solicitudRegistro.getDni());
+        Correo correo = new Correo (solicitudRegistro.getCorreo(), solicitudRegistro.getDni());
+        Contacto contacto = new Contacto(solicitudRegistro.getDni(), solicitudRegistro.getRuc());
+        Solicitud solicitud = new Solicitud();
+        solicitud.setCodigoTipo((identificarTipoSolicitud(solicitudRegistro)));
+        Buscar buscarDireccion = new Buscar();
+        if(verificarDNIenPersona(buscar) == true){
+            /** Existe el DNI en persona*/
+            if(verificarDNIadmitido(buscar) == false){
+                /** No fue admitido anteriormente*/
+                /** Ejecutamos sentencias de actualizar la base de datos*/
+                persona.setCodigoDireccion(obtenerCodigoDireccionDePersona(persona));
+                direccion.setCodigoDireccion(persona.getCodigoDireccion());
+                modificarDireccion(direccion);
+                modificarPersona(persona);
+                modificarTelefono(telefono);
+                modificarCorreo(correo);
+                agregarSolicitud(solicitud);
+                if(identificarTipoSolicitud(solicitudRegistro) == "E"){
+                    /**Solicitud de tipo Externo */
+                    agregarContacto(contacto);
+                }
+                else{
+                    /**Solicitud de tipo Interno */
+                }
+            }
+
+        }else{
+            /** No existe el DNI en persona */
+            /** Ejecutamos sentencias de insercion en la base de datos*/
+            agregarDireccion(direccion);
+            persona.setCodigoDireccion(obtenerCodigoUltimaDireccion());
+            agregarPersona(persona);
+            agregarCorreo(correo);
+            agregarTelefono(telefono);
+            agregarSolicitud(solicitud);
+
+            if(identificarTipoSolicitud(solicitudRegistro) == "E" ){
+                /**Solicitud de tipo Externo */
+                agregarContacto(contacto);
+
+            }
+            else{
+                /**Solicitud de tipo Interno */
+
+            }
+        }
+
+
+    }
+    /**Registro del usuario*/ /**Revisar Solicitud*/
     public List<SolicitudInterno> traerSolicitudesInterno(Buscar buscar){
         List<SolicitudInterno> lista = new ArrayList<>();
-
         try {
             Connection con = jdbcTemplate.getDataSource().getConnection();
             String sql =  " SELECT " +
@@ -56,11 +110,8 @@ public class AssetecDaoImpl2 implements AssetecDao2 {
         }
         return lista;
     }
-
     public List<SolicitudExterno> traerSolicitudesExterno(Buscar buscar){
         List<SolicitudExterno> Lista = new ArrayList<>();
-
-
         try {
             Connection con = jdbcTemplate.getDataSource().getConnection();
             String sql =  "SELECT "+
@@ -98,90 +149,183 @@ public class AssetecDaoImpl2 implements AssetecDao2 {
         }
         return Lista;
     }
-
-    public void enviarSolicitudRegistro (SolicitudRegistro solicitudRegistro){
-        Buscar buscar = new Buscar();
-        buscar.setContenido(solicitudRegistro.getDni());
-        Direccion direccion = new Direccion(solicitudRegistro.getCodPostal(), solicitudRegistro.getDireccion(), solicitudRegistro.getUnidad(), solicitudRegistro.getDistrito(), solicitudRegistro.getProvincia(), solicitudRegistro.getPais());
-        Persona persona = new Persona(solicitudRegistro.getDni(), solicitudRegistro.getNombres(), solicitudRegistro.getApellidoM(), solicitudRegistro.getApellidoP(), solicitudRegistro.getContrasenia(), solicitudRegistro.getFirma());
-        Telefono telefono = new Telefono(solicitudRegistro.getCelular(), solicitudRegistro.getPrefijo(), solicitudRegistro.getDni());
-        Correo correo = new Correo (solicitudRegistro.getCorreo(), solicitudRegistro.getDni());
-        Contacto contacto = new Contacto(solicitudRegistro.getDni(), solicitudRegistro.getRuc());
-        Solicitud solicitud = new Solicitud();
-        solicitud.setCodigoTipo((identificarTipoSolicitud(solicitudRegistro)));
-        if(verificarDNIenPersona(buscar) == true){
-            /** Existe el DNI en persona*/
-            if(verificarDNIadmitido(buscar) == false){
-                /** No fue admitido anteriormente*/
-                /** Ejecutamos sentencias de actualizar la base de datos*/
-                modificarCorreo(correo);
-                modificarTelefono(telefono);
-                modificarPersona(persona);
-                agregarSolicitud(solicitud);
-                if(identificarTipoSolicitud(solicitudRegistro) == "E"){
-                    /**Solicitud de tipo Externo */
-                    agregarContacto(contacto);
-                }
-                else{
-                    /**Solicitud de tipo Interno */
-                }
-            }
-
-        }else{
-            /** No existe el DNI en persona */
-            /** Ejecutamos sentencias de insercion en la base de datos*/
-
-            agregarCorreo(correo);
-            agregarTelefono(telefono);
-            agregarSolicitud(solicitud);
-            agregarPersona(persona);
-            if(identificarTipoSolicitud(solicitudRegistro) == "E" ){
-                /**Solicitud de tipo Externo */
-                agregarContacto(contacto);
-
-            }
-            else{
-                /**Solicitud de tipo Interno */
-
-            }
-        }
-
-
-    }
-
-    public void responderSolicitudInterno (SolicitudInterno solicitudInterno, SolicitudRespuesta solicitudRespuesta){
+    public void responderSolicitudInterno (SolicitudInternoRespuesta solicitudInternoRespuesta){
         Solicitud auxSolicitud = new Solicitud();
-        auxSolicitud.setCodigoSolicitud(solicitudInterno.getCodSolicitud());
-        auxSolicitud.setFechaSolicitud(solicitudInterno.getFechaSolicitud());
+        auxSolicitud.setCodigoSolicitud(solicitudInternoRespuesta.getCodSolicitud());
+        auxSolicitud.setFechaSolicitud(solicitudInternoRespuesta.getFechaSolicitud());
         auxSolicitud.setDni(traerDniSolicitud(auxSolicitud));
-        auxSolicitud.setFechaSolicitud(solicitudInterno.getFechaSolicitud());
+        auxSolicitud.setFechaSolicitud(solicitudInternoRespuesta.getFechaSolicitud());
 
 
         Trabajador auxTrabajador = new Trabajador();
         auxTrabajador.setDni(auxSolicitud.getDni());
+
+        SolicitudRespuesta solicitudRespuesta = new SolicitudRespuesta();
+        solicitudRespuesta.setCodSolicitud(solicitudInternoRespuesta.getCodSolicitud());
+        solicitudRespuesta.setEstado(solicitudInternoRespuesta.getEstado());
 
         responderSolicitud(solicitudRespuesta);
         if(solicitudRespuesta.getEstado().equals("Aceptado")){
             agregarTrabajador(auxTrabajador);
         }
     }
-    public void responderSolicitudExterno (SolicitudExterno solicitudExterno, SolicitudRespuesta solicitudRespuesta){
+    public void responderSolicitudExterno (SolicitudExternoRespuesta solicitudExternoRespuesta){
+
+
         Solicitud auxSolicitud = new Solicitud();
-        auxSolicitud.setCodigoSolicitud(solicitudExterno.getCodSolicitud());
-        auxSolicitud.setFechaSolicitud(solicitudExterno.getFechaSolicitud());
+        auxSolicitud.setCodigoSolicitud(solicitudExternoRespuesta.getCodSolicitud());
+        auxSolicitud.setFechaSolicitud(solicitudExternoRespuesta.getFechaSolicitud());
         auxSolicitud.setDni(traerDniSolicitud(auxSolicitud));
-        auxSolicitud.setFechaSolicitud(solicitudExterno.getFechaSolicitud());
+        auxSolicitud.setFechaSolicitud(solicitudExternoRespuesta.getFechaSolicitud());
 
 
-        Contacto auxContacto = new Contacto(auxSolicitud.getDni(), solicitudExterno.getRuc());
+        Contacto auxContacto = new Contacto(auxSolicitud.getDni(), solicitudExternoRespuesta.getRuc());
+
+        SolicitudRespuesta solicitudRespuesta = new SolicitudRespuesta();
+        solicitudRespuesta.setCodSolicitud(solicitudExternoRespuesta.getCodSolicitud());
+        solicitudRespuesta.setEstado(solicitudExternoRespuesta.getEstado());
 
         responderSolicitud(solicitudRespuesta);
         if(solicitudRespuesta.getEstado().equals("Rechazado")){
             eliminarContacto(auxContacto);
         }
     }
+    /**Registro del usuario*/ /**Modificar Numeros*/
+    public List<Telefono> traerTelefonos (Buscar buscar){
+        List<Telefono> lista = new ArrayList<>();
+        try{
+            Connection con = jdbcTemplate.getDataSource().getConnection();
+            String sql=" SELECT NUMERO, PREFIJO, COD_TELEFONO, DNI FROM TELEFONO WHERE DNI = ? ORDER BY PREFIJO";
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setString(1, buscar.getContenido());;
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()) {
+                Telefono elemento = new Telefono();
+                elemento.setNumero(rs.getString("NUMERO"));
+                elemento.setPrefijo(rs.getString("PREFIJO"));
+                elemento.setCodigoTelefono(rs.getInt("COD_TELEFONO"));
+                elemento.setDni(rs.getString("DNI"));
+                lista.add(elemento);
+            }
+            rs.close();
+            ps.close();
+            con.close();
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return lista;
 
 
+
+    }
+    public void agregarNumero(Telefono telefono){
+        agregarTelefono(telefono);
+    }
+    public void quitarNumero(Telefono telefono){
+        quitarNumero(telefono);
+    }
+    /**Registro del usuario*/ /**Modificar Correos*/
+    public List<Correo> traerCorreos (Buscar buscar){
+        List<Correo> lista = new ArrayList<>();
+        try{
+            Connection con = jdbcTemplate.getDataSource().getConnection();
+            String sql=" SELECT CORREO, COD_CORREO, DNI FROM TELEFONO WHERE DNI = ? ORDER BY CORREO ";
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setString(1, buscar.getContenido());;
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()) {
+                Correo elemento = new Correo();
+                elemento.setCorreo(rs.getString("CORREO"));
+                elemento.setCodigoCorreo(rs.getInt("COD_CORREO"));
+                elemento.setDni(rs.getString("DNI"));
+                lista.add(elemento);
+            }
+            rs.close();
+            ps.close();
+            con.close();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return lista;
+
+    }
+    public void agregarCorreoElectronico(Correo correo){
+        agregarCorreo(correo);
+    }
+    public void quitarCorreoElectronico(Correo correo){
+        eliminarCorreo(correo);
+    }
+
+    /**Ingreso del usuario*/ /**Ingresar*/
+    public Persona ingresarCuenta (Persona persona){
+        Persona elemento = new Persona();
+        try{
+            Connection con = jdbcTemplate.getDataSource().getConnection();
+            String sql=" SELECT P.DNI " +
+                    " FROM PERSONA P, SOLICITUD S " +
+                    " WHERE P.DNI=S.DNI AND " +
+                    " S.ESTADO='Aceptado' AND " +
+                    " P.DNI = ? AND " +
+                    " P.CONTRASENIA = ? ";
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setString(1, persona.getDni());
+            ps.setString(2, persona.getContrasenia());
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()) {
+                elemento.setDni(rs.getString("DNI"));
+            }
+            rs.close();
+            ps.close();
+            con.close();
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return elemento;
+    }
+
+
+    /**Modificar detalles del rol*/ /**Asignar Perfil*/
+    public List<TrabajadorPerfilNombre> traerTrabajadorPerfiles (Buscar buscar){
+        List<TrabajadorPerfilNombre> lista = new ArrayList<>();
+        try{
+            Connection con = jdbcTemplate.getDataSource().getConnection();
+            String sql=" SELECT TP.COD_PERFIL, TP.DNI, P.NOMBRE FROM TRABAJADOR_PERFIL TP, PERFIL P WHERE TP.COD_PERFIL = P.COD_PERFIL AND DNI = ? ORDER BY CORREO ";
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setString(1, buscar.getContenido());;
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()) {
+                TrabajadorPerfilNombre elemento = new TrabajadorPerfilNombre();
+                elemento.setCodigoPerfil(rs.getString("COD_PERFIL"));
+                elemento.setDni(rs.getString("DNI"));
+                elemento.setNombre(rs.getString("NOMBRE"));
+                lista.add(elemento);
+            }
+            rs.close();
+            ps.close();
+            con.close();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return lista;
+
+    }
+    public void agregarTrabajadorPerfil(TrabajadorPerfilNombre trabajadorPerfilNombre){
+        agregarTrabajadorPerfilNombre(trabajadorPerfilNombre);
+    }
+    public void quitarTrabajadorPerfil(TrabajadorPerfilNombre trabajadorPerfilNombre){
+        eliminarTrabajadorPerfiNombre(trabajadorPerfilNombre);
+    }
+
+
+
+
+
+
+
+
+    /**Registro*/
     private String identificarTipoSolicitud (SolicitudRegistro solicitudRegistro){
         String aux="E";
         if(solicitudRegistro.getRuc().isBlank()){
@@ -205,9 +349,6 @@ public class AssetecDaoImpl2 implements AssetecDao2 {
             throwables.printStackTrace();
         }
     }
-
-
-    /**Registro*/
     private String traerDniSolicitud (Solicitud solicitud){
         String dni = "";
         try{
@@ -308,7 +449,6 @@ public class AssetecDaoImpl2 implements AssetecDao2 {
             throwables.printStackTrace();
         }
     }
-
     private Boolean verificarDNIenPersona (Buscar buscar){
         /**Aquí se comprueba que el DNI exista o no*/
         return true;
@@ -363,6 +503,9 @@ public class AssetecDaoImpl2 implements AssetecDao2 {
 
     }
 
+
+
+
     /**Direcciones*/
     private Integer obtenerCodigoUltimaDireccion(){
         /**Aquí se obtiene el codigo de la direccion*/
@@ -384,6 +527,27 @@ public class AssetecDaoImpl2 implements AssetecDao2 {
         }
         return elemento;
 
+    }
+    private Integer obtenerCodigoDireccionDePersona(Persona persona){
+        /**Aquí se obtiene el codigo de la direccion*/
+        Integer elemento=0;
+        try{
+            Connection con = jdbcTemplate.getDataSource().getConnection();
+            String sql=" SELECT COD_DIRECCION FROM PERSONA WHERE DNI = ?";
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setString(1, persona.getDni());
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()) {
+                elemento=rs.getInt("COD_DIRECCION");
+            }
+            rs.close();
+            ps.close();
+            con.close();
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return elemento;
     }
     private void agregarDireccion (Direccion direccion){
         /**Aquí se agrega la direccion en caso la direccion no exista*/
@@ -457,6 +621,7 @@ public class AssetecDaoImpl2 implements AssetecDao2 {
         }
         return elemento;
     }
+
     /** Telefonos */
     private void agregarTelefono (Telefono telefono){
         try {
@@ -513,34 +678,7 @@ public class AssetecDaoImpl2 implements AssetecDao2 {
         }
 
     }
-    private List<Telefono> traerTelefonos (Buscar buscar){
-        List<Telefono> lista = new ArrayList<>();
-        try{
-            Connection con = jdbcTemplate.getDataSource().getConnection();
-            String sql=" SELECT NUMERO, PREFIJO, COD_TELEFONO, DNI FROM TELEFONO WHERE DNI = ? ORDER BY PREFIJO";
-            PreparedStatement ps = con.prepareStatement(sql);
-            ps.setString(1, buscar.getContenido());;
-            ResultSet rs = ps.executeQuery();
-            while(rs.next()) {
-                Telefono elemento = new Telefono();
-                elemento.setNumero(rs.getString("NUMERO"));
-                elemento.setPrefijo(rs.getString("PREFIJO"));
-                elemento.setCodigoTelefono(rs.getInt("COD_TELEFONO"));
-                elemento.setDni(rs.getString("DNI"));
-                lista.add(elemento);
-            }
-            rs.close();
-            ps.close();
-            con.close();
 
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-        return lista;
-
-
-
-    }
     /** Correos */
     private void agregarCorreo (Correo correo){
         try {
@@ -594,32 +732,9 @@ public class AssetecDaoImpl2 implements AssetecDao2 {
         }
 
     }
-    private List<Correo> traerCorreos (Buscar buscar){
-        List<Correo> lista = new ArrayList<>();
-        try{
-            Connection con = jdbcTemplate.getDataSource().getConnection();
-            String sql=" SELECT CORREO, COD_CORREO, DNI FROM TELEFONO WHERE DNI = ? ORDER BY CORREO ";
-            PreparedStatement ps = con.prepareStatement(sql);
-            ps.setString(1, buscar.getContenido());;
-            ResultSet rs = ps.executeQuery();
-            while(rs.next()) {
-                Correo elemento = new Correo();
-                elemento.setCorreo(rs.getString("CORREO"));
-                elemento.setCodigoCorreo(rs.getInt("COD_CORREO"));
-                elemento.setDni(rs.getString("DNI"));
-                lista.add(elemento);
-            }
-            rs.close();
-            ps.close();
-            con.close();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-        return lista;
 
-    }
     /** Perfiles*/
-    private void agregarPerfil (TrabajadorPerfilNombre trabajadorPerfilNombre){
+    private void agregarTrabajadorPerfilNombre (TrabajadorPerfilNombre trabajadorPerfilNombre){
         try {
             Connection con = jdbcTemplate.getDataSource().getConnection();
             String SQL= " INSERT INTO TRABAJADOR_PERFIL( COD_PERFIL, DNI ) " +
@@ -637,7 +752,7 @@ public class AssetecDaoImpl2 implements AssetecDao2 {
 
 
     }
-    private void eliminarPerfil (TrabajadorPerfilNombre trabajadorPerfilNombre){
+    private void eliminarTrabajadorPerfiNombre (TrabajadorPerfilNombre trabajadorPerfilNombre){
         try {
             Connection con = jdbcTemplate.getDataSource().getConnection();
             String SQL= " DELETE FROM TRABAJADOR_PERFIL " +
@@ -652,30 +767,6 @@ public class AssetecDaoImpl2 implements AssetecDao2 {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-
-    }
-    private List<TrabajadorPerfilNombre> traerTrabajadorPerfiles (Buscar buscar){
-        List<TrabajadorPerfilNombre> lista = new ArrayList<>();
-        try{
-            Connection con = jdbcTemplate.getDataSource().getConnection();
-            String sql=" SELECT TP.COD_PERFIL, TP.DNI, P.NOMBRE FROM TRABAJADOR_PERFIL TP, PERFIL P WHERE TP.COD_PERFIL = P.COD_PERFIL AND DNI = ? ORDER BY CORREO ";
-            PreparedStatement ps = con.prepareStatement(sql);
-            ps.setString(1, buscar.getContenido());;
-            ResultSet rs = ps.executeQuery();
-            while(rs.next()) {
-                TrabajadorPerfilNombre elemento = new TrabajadorPerfilNombre();
-                elemento.setCodigoPerfil(rs.getString("COD_PERFIL"));
-                elemento.setDni(rs.getString("DNI"));
-                elemento.setNombre(rs.getString("NOMBRE"));
-                lista.add(elemento);
-            }
-            rs.close();
-            ps.close();
-            con.close();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-        return lista;
 
     }
 }

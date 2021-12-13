@@ -20,6 +20,10 @@ public class Persona {
         contrasenia = cont;
         firma = fir;
     }
+
+    public Persona() {
+
+    }
 }
 
 
