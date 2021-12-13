@@ -2,7 +2,7 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Correo, Direccion, Persona, Telefono} from '../model';
 import {ApiService} from '../apiService';
 import {Router} from '@angular/router';
-import {DataService} from "../services/data.service";
+import {DataService} from '../services/data.service';
 
 @Component({
   selector: 'app-signin',
@@ -15,11 +15,7 @@ export class SigninComponent implements OnInit {
 
   ngOnInit(): void {
   }
-  verificar(): void{
-    this.apiservice.esCliente(this.dataService.persona).subscribe((respuesta) =>{
-      this.dataService.contacto = respuesta;
-    });
-  }
+
   /*
   validar(): void{
     this.mensaje = null;

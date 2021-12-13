@@ -36,8 +36,8 @@ a.cart-btn {
 tr.total-data td a div{
   display: inline-table;
 }
-#estado{
-  width: 80px;
+.estado{
+  width: 30px;
   color: black;
 }
 #actividad{
@@ -48,9 +48,24 @@ tr.total-data td a div{
   background-color: #FFFFFF;
 }
 h3, .h3 {
-  font-size: 2rem;
+  font-size: 70px;
   font-weight: 700;
   line-height: 2.25rem;
+  margin-bottom: 4rem;
 }
-
-
+h4{
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+.cart-banner .content-column .text {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+.time-counter {
+  margin-top: 30px;
+}
+.posicionF{
+  width: 20px;
+  color: black;
+  visibility: visible;
+}

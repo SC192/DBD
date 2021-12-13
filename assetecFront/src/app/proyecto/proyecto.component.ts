@@ -42,6 +42,7 @@ export class ProyectoComponent implements OnInit {
   }
   infoActividad(index: number): void{
     this.dataService.actividad = this.dataService.proyecto.actividades[index];
+    this.dataService.actividad.proyecto = this.dataService.proyecto;
   }
   listaRoles(): void{
     this.apiservice.obtenerListaRolesProyecto(this.dataService.proyecto).subscribe((data) => {
@@ -63,7 +64,7 @@ export class ProyectoComponent implements OnInit {
         this.j = 0;
         while (this.j < this.dataService.proyecto.actividades.length) {
           if (this.dataService.proyecto.actividades[this.j].codigoActividad == this.dataService.proyecto.actividades[this.i].codActividadPadre) {
-              this.dataService.proyecto.actividades[this.i].posicionF = this.dataService.proyecto.actividades[this.j].posicion * 10 + this.dataService.proyecto.actividades[this.i].posicion;
+            this.dataService.proyecto.actividades[this.i].posicionF = this.dataService.proyecto.actividades[this.j].posicion * 10 + this.dataService.proyecto.actividades[this.i].posicion;
             this.m = this.dataService.proyecto.actividades[this.j].actividadesHijas.length;
             this.dataService.proyecto.actividades[this.j].actividadesHijas[this.m] = this.dataService.proyecto.actividades[this.i];
             this.j = this.dataService.proyecto.actividades.length;
@@ -78,6 +79,7 @@ export class ProyectoComponent implements OnInit {
       }
     }
   }
+  //no funciona no trae nada
   reporteProyecto(): void{
     this.apiservice.reporteFechasProyecto(this.dataService.proyecto).subscribe((data) => {
       this.dataService.reporte = data;
@@ -91,6 +93,15 @@ export class ProyectoComponent implements OnInit {
   reporteGastos(): void{
     this.apiservice.reporteGastosActividad(this.dataService.proyecto).subscribe((data) => {
       this.dataService.gastos = data;
+    });
+  }
+  buscar(): void{
+    this.apiservice.traerProyectosUsuario(this.dataService.persona).subscribe((data) => {
+      this.dataService.proyectos = data;
+    });
+  }
+  cierre(): void{
+    this.apiservice.generarCierre(this.dataService.proyecto).subscribe((data) => {
     });
   }
 }

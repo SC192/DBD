@@ -22,7 +22,8 @@ export class DataService {
   };
   public proyecto: Proyecto = null;
   public actividad: Actividad = null;
-  reporte: string = null;
-  datos: string [] = [];
-  gastos: string [] = [];
+  public reporte: string = null;
+  public datos: string [] = [];
+  public gastos: string [] = [];
+  public proyectos: Proyecto [] = [];
 }

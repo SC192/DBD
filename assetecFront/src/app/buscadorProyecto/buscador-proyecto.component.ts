@@ -9,7 +9,6 @@ import {DataService} from '../services/data.service';
   styleUrls: ['./buscador-proyecto.component.scss']
 })
 export class BuscadorProyectoComponent implements OnInit {
-  proyectos: Proyecto [];
   filtro: string = '*';
   i: number = 0;
   j: number = 0;
@@ -20,7 +19,7 @@ export class BuscadorProyectoComponent implements OnInit {
 
   buscar(): void{
     this.apiservice.traerProyectosUsuario(this.dataService.persona).subscribe((data) => {
-      this.proyectos = data;
+      this.dataService.proyectos = data;
     });
   }
   cerrarSesion(): void{
@@ -39,7 +38,7 @@ export class BuscadorProyectoComponent implements OnInit {
     this.dataService.contacto = false;
   }
   infoProyecto(index: number): void {
-    this.dataService.proyecto = this.proyectos[index];
+    this.dataService.proyecto = this.dataService.proyectos[index];
   }
   listaAlcances(): void{
     this.apiservice.obtenerAlcancesProyecto(this.dataService.proyecto).subscribe((data) => {

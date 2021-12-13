@@ -47,4 +47,9 @@ export class ActaComponent implements OnInit {
     }
     this.listaAcuerdos.length = this.listaAcuerdos.length - 1;
   }
+  buscar(): void{
+    this.apiservice.traerProyectosUsuario(this.dataService.persona).subscribe((data) => {
+      this.dataService.proyectos = data;
+    });
+  }
 }
