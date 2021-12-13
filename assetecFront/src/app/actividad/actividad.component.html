@@ -9,8 +9,8 @@
           <nav class="main-menu">
             <ul>
               <li class="current-list-item"><a routerLink="/home">Home</a></li>
-              <li><a routerLink="/buscador">Proyectos</a></li>
-              <li><a >Solicitudes</a>
+              <li><a (click)="buscar()" routerLink="/buscador">Proyectos</a></li>
+              <li><a *ngIf="dataService.contacto == false">Solicitudes</a>
                 <ul class="sub-menu">
                   <li><a routerLink="/solicitudT">Trabajadores</a></li>
                   <li><a routerLink="/solicitudC">Contactos</a></li>
@@ -19,7 +19,7 @@
               <li><a class="mobile-hide" ><i class="fas fa-user"></i></a>
                 <ul class="sub-menu" href="#">
                   <li><a routerLink="/perfil">Modificar Perfil</a></li>
-                  <li><a routerLink="">Cerrar Sesion</a></li>
+                  <li><a (click)="cerrarSesion()" routerLink="">Cerrar Sesion</a></li>
                 </ul>
               </li>
             </ul>
@@ -53,16 +53,18 @@
 
       <!--Content Column-->
       <div class="content-column col-lg-8">
-        <p class="top-sub">Estado</p>
-        <h3><span class="orange-text">Actividad</span> Nombre</h3>
-        <h4>Proyecto</h4>
+        <p class="top-sub" *ngIf="dataService.actividad.fechaInicioReal == null">INICIO</p>
+        <p class="top-sub" *ngIf="dataService.actividad.fechaInicioReal != null && dataService.actividad.fechaFinReal == null">PROCESO</p>
+        <p class="top-sub" *ngIf="dataService.actividad.fechaFinReal != null">FIN</p>
+        <h3><span class="orange-text">Actividad</span> {{dataService.actividad.nombre}}</h3>
+        <h4>Proyecto {{dataService.actividad.proyecto.nombre}}</h4>
         <p class="blog-meta">
-          <span class="author"><i class="fas fa-clock"></i> HorasEstimada</span>
+          <span class="author"><i class="fas fa-clock"></i> {{dataService.actividad.cantidadHoras}}</span>
           <span class="date"><i class="fas fa-sort-numeric-down"></i> Posicion</span>
         </p>
-        <div class="text">Descripcion</div>
+        <div class="text">{{dataService.actividad.descripcion}}</div>
         <!--Countdown Timer-->
-        <div class="time-counter"><div class="time-countdown clearfix" ><div class="counter-column"><div class="inner"><span class="count">FechaInicio</span>Fecha Inicio</div></div> <div class="counter-column"><div class="inner"><span class="count">FechaFin</span>Fecha Fin</div></div>  </div></div>
+        <div class="time-counter"><div class="time-countdown clearfix" ><div class="counter-column"><div class="inner"><span class="count">{{dataService.actividad.fechaInicioEstimada}}</span>Fecha Inicio</div></div> <div class="counter-column"><div class="inner"><span class="count">{{dataService.actividad.fechaFinEstimada}}</span>Fecha Fin</div></div>  </div></div>
       </div>
       <!--Image Column-->
       <div class="col-lg-4">
@@ -73,24 +75,16 @@
             <tr class="table-total-row">
               <th>Roles</th>
               <th></th>
-              <th></th>
-              <th>$$</th>
+              <th>S/</th>
+              <th>{{costoTotal}}</th>
             </tr>
             </thead>
             <tbody>
-            <tr class="total-data">
-              <td><strong>Nombre rol </strong></td>
-              <td>Cant</td>
-              <td>Horas</td>
-              <td>Costo</td>
-            </tr>
-            <tr class="total-data">
-              <td><strong>Shipping: </strong></td>
-              <td>$45</td>
-            </tr>
-            <tr class="total-data">
-              <td><strong>Total: </strong></td>
-              <td>$545</td>
+            <tr *ngFor="let item of roles" class="total-data">
+              <td><strong>{{item.nombrePerfil}} </strong></td>
+              <td>{{item.cantidad}}</td>
+              <td>{{item.costoHora}}</td>
+              <td>{{item.costoPerfil}}</td>
             </tr>
             </tbody>
           </table>
@@ -99,7 +93,7 @@
             <p><input type="submit" routerLink="/asistencia" value="Asistencia"></p>
             <p><input type="submit" routerLink="/comprobante" value="Registrar Comprobante"></p>
             <p><input type="submit" routerLink="/gasto" value="Registrar Remuneracion"></p>
-            <p><input type="submit" value="Completar Actividad"></p>
+            <p><input type="submit" (click)="completar()" value="Completar Actividad"></p>
           </div>
         </div>
 

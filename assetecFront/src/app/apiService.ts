@@ -2,7 +2,17 @@ import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { retry, catchError} from 'rxjs/operators';
-import {Actividad, Alcance, Objetivo, Persona, Proyecto, RegistroActa, Rol} from './model';
+import {
+  Actividad,
+  Alcance,
+  Objetivo,
+  ObjetivoActividad,
+  Persona,
+  Proyecto,
+  RegistroActa,
+  RegistroPago,
+  Rol
+} from './model';
 
 
 @Injectable({
@@ -32,13 +42,6 @@ export class ApiService {
 
   traerProyectosUsuario(data: Persona): Observable<Proyecto[]> {
     return this.http.post<Proyecto[]>(this.baseurl + 'traer-proyectos-usuario', data, this.httpOptions)
-      .pipe(
-        retry(1),
-        catchError(this.errorHandl)
-      );
-  }
-  esCliente(data: Persona): Observable<boolean> {
-    return this.http.post<boolean>(this.baseurl + 'trabajador', data, this.httpOptions)
       .pipe(
         retry(1),
         catchError(this.errorHandl)
@@ -102,6 +105,34 @@ export class ApiService {
   }
   reporteGastosActividad(data: Proyecto): Observable<string[]> {
     return this.http.post<string[]>(this.baseurl + 'reporte-gastos-actividad', data, this.httpOptions)
+      .pipe(
+        retry(1),
+        catchError(this.errorHandl)
+      );
+  }
+  obtenerObjetivosActividad(data: Actividad): Observable<ObjetivoActividad[]> {
+    return this.http.post<ObjetivoActividad[]>(this.baseurl + 'reporte-gastos-actividad', data, this.httpOptions)
+      .pipe(
+        retry(1),
+        catchError(this.errorHandl)
+      );
+  }
+  completarActividad(data: Actividad): Observable<void> {
+    return this.http.post<void>(this.baseurl + 'completar-actividad', data, this.httpOptions)
+      .pipe(
+        retry(1),
+        catchError(this.errorHandl)
+      );
+  }
+  obtenerListaRolesActividad(data: Actividad): Observable<Rol[]> {
+    return this.http.post<Rol[]>(this.baseurl + 'obtener-roles-actividad', data, this.httpOptions)
+      .pipe(
+        retry(1),
+        catchError(this.errorHandl)
+      );
+  }
+  registrarPago(data: RegistroPago): Observable<void> {
+    return this.http.post<void>(this.baseurl + 'obtener-roles-actividad', data, this.httpOptions)
       .pipe(
         retry(1),
         catchError(this.errorHandl)

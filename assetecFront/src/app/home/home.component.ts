@@ -9,14 +9,24 @@ import {DataService} from "../services/data.service";
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-  pagina: string = null;
   constructor(private apiservice: ApiService, private route: Router, public dataService: DataService) { }
 
   ngOnInit(): void {
   }
 
   cerrarSesion(): void{
-    this.dataService.persona = null;
+    this.dataService.persona = {
+      dni : '54684528',
+      primerNombre: null,
+      apellidoMaterno: null,
+      apellidoPaterno: null,
+      contrasenia: null,
+      firma: null,
+      direccion: null,
+      telefonos: null,
+      correos: null,
+      rol: 'GERENTE DE PROYECTOS'
+    };
     this.dataService.contacto = false;
   }
   buscar(): void{

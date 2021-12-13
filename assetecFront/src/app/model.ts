@@ -72,13 +72,14 @@ export class Actividad {
               public fechaInicioReal: string,
               public fechaFinEstimada: string,
               public fechaFinReal: string,
-              public gasto: Gasto,
+              public gasto: RegistroPago,
               public cantidadHoras: number,
               public posicion: number,
               public posicionF: number,
               public codActividadPadre: string,
               public actividadesHijas: Actividad [],
-              public objetivos: ObjetivoActividad []) {}
+              public objetivos: ObjetivoActividad [],
+              public proyecto: Proyecto) {}
 }
 
 export class Correo {
@@ -112,11 +113,11 @@ export class ComprobantePago {
               public tipoGasto: TipoGasto) {}
 }
 
-export class Gasto {
-  constructor(public codigoGasto: string,
-              public maximaRemuneracion: number,
-              public moneda: Moneda,
-              public comprobantes: ComprobantePago []) {}
+export class RegistroPago {
+  constructor(public maximaRemuneracion: number,
+              public nombreMoneda: string,
+              public codigoActividad: string,
+              public actividad: Actividad[]) {}
 }
 
 export class Cliente {
@@ -261,3 +262,4 @@ export class RegistroActa{
   ) {
   }
 }
+
