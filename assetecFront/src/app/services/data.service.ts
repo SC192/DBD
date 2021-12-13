@@ -5,8 +5,8 @@ import {Correo, Direccion, Persona, Proyecto, Telefono} from '../model';
   providedIn: 'root'
 })
 export class DataService {
-  contacto: boolean = false;
-  persona: Persona = {
+  public contacto: boolean = false;
+  public persona: Persona = {
     dni : '54684528',
     primerNombre: null,
     apellidoMaterno: null,
@@ -17,5 +17,5 @@ export class DataService {
     telefonos: null,
     correos: null
   };
-  proyecto: Proyecto = null;
+  public proyecto: Proyecto = null;
 }

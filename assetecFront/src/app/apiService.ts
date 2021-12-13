@@ -9,7 +9,7 @@ import {BusquedaProyectoResponse, Persona, Proyecto} from './model';
   providedIn: 'root'
 })
 export class ApiService {
-  baseurl = 'http://127.0.0.1:8080/';
+  baseurl = 'http://127.0.0.1:8090/';
   // TODO: Falta averiguar si es el mismo o cambio la base url.
   httpOptions = {
     headers: new HttpHeaders({
@@ -30,8 +30,8 @@ export class ApiService {
 
   constructor(private http: HttpClient) {  }
 
-  treaerProyectosUsuario(data: Persona): Observable<BusquedaProyectoResponse> {
-    return this.http.post<BusquedaProyectoResponse>(this.baseurl + 'traer-proyectos-usuario', data, this.httpOptions)
+  traerProyectosUsuario(data: Persona): Observable<Proyecto[]> {
+    return this.http.post<Proyecto[]>(this.baseurl + 'traer-proyectos-usuario', data, this.httpOptions)
       .pipe(
         retry(1),
         catchError(this.errorHandl)

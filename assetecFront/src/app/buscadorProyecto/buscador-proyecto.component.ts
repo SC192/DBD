@@ -9,15 +9,15 @@ import {DataService} from '../services/data.service';
   styleUrls: ['./buscador-proyecto.component.scss']
 })
 export class BuscadorProyectoComponent implements OnInit {
-  proyectos: Proyecto [] = [];
+  proyectos: Proyecto [];
   filtro: string = '*';
   constructor(private apiservice: ApiService, public dataService: DataService) { }
   ngOnInit(): void {
   }
 
   buscar(): void{
-    this.apiservice.treaerProyectosUsuario(this.dataService.persona).subscribe((data) => {
-      this.proyectos = data.listaProyecto;
+    this.apiservice.traerProyectosUsuario(this.dataService.persona).subscribe((data) => {
+      this.proyectos = data;
     });
   }
   cerrarSesion(): void{
