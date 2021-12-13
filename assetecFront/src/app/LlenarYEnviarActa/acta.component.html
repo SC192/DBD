@@ -9,7 +9,7 @@
           <nav class="main-menu">
             <ul>
               <li class="current-list-item"><a routerLink="/home">Home</a></li>
-              <li><a routerLink="/buscador">Proyectos</a></li>
+              <li><a (click)="buscar()" routerLink="/buscador">Proyectos</a></li>
               <li><a *ngIf="dataService.contacto == false">Solicitudes</a>
                 <ul class="sub-menu">
                   <li><a routerLink="/solicitudT">Trabajadores</a></li>
@@ -58,7 +58,7 @@
             <div class="col-lg-12 col-md-6  ">
               <div *ngFor="let item of listaAcuerdos; let i = index" class="single-product-item d-flex">
                 <div class="acuerdo">
-                  <h3>Acuerdo {{i}}</h3>
+                  <h3>Acuerdo {{i + 1}}</h3>
                   <p class="product-price"> <span>{{item}}</span> </p>
                 </div>
                 <div class="opciones align-items-center">

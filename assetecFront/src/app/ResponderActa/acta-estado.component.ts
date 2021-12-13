@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import {ApiService} from '../apiService';
+import {DataService} from '../services/data.service';
 
 @Component({
   selector: 'app-acta-estado',
@@ -7,7 +9,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ActaEstadoComponent implements OnInit {
 
-  constructor() { }
+  constructor(private apiservice: ApiService, public dataService: DataService) { }
 
   ngOnInit(): void {
   }

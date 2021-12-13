@@ -9,7 +9,7 @@
           <nav class="main-menu">
             <ul>
               <li class="current-list-item"><a routerLink="/home">Home</a></li>
-              <li><a routerLink="/buscador">Proyectos</a></li>
+              <li><a (click)="buscar()" routerLink="/buscador">Proyectos</a></li>
               <li><a *ngIf="dataService.contacto == false">Solicitudes</a>
                 <ul class="sub-menu">
                   <li><a routerLink="/solicitudT">Trabajadores</a></li>
@@ -124,7 +124,6 @@
             <p><input type="submit" *ngIf="dataService.persona.rol == 'GERENTE DE PROYECTOS' || dataService.persona.rol == 'LIDER USUARIO'" (click)="reporteProyecto(); reporteActividades(); reporteGastos()" routerLink="/resultados" value="Generar Resultados"></p>
             <p><input type="submit"  *ngIf="(dataService.persona.rol == 'GERENTE DE PROYECTOS' || dataService.persona.rol == 'JEFE DE PROYECTOS')" routerLink="/acta" value="Generar Acta"></p> <!--Agregar dataService.acciones == 'cierre' && -->
             <p><input type="submit" *ngIf="(dataService.persona.rol == 'GERENTE DE PROYECTOS' || dataService.persona.rol == 'JEFE DE PROYECTOS')" routerLink="/actaEstado" value="Acta"></p> <!--*ngIf="dataService.acciones == 'enviado' &&  -->
-            <p><input type="submit" *ngIf="(dataService.persona.rol == 'GERENTE DE PROYECTOS' || dataService.persona.rol == 'JEFE DE PROYECTOS' || dataService.persona.rol == 'LIDER USUARIO')" value="Generar Firma"></p>  <!--*ngIf="dataService.acciones == 'enviado' && -->
           </div>
         </div>
 
