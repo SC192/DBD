@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import {Routes, RouterModule, Router} from '@angular/router';
 import {HomeComponent} from './home/home.component';
 import {AsistenciaComponent} from './asistencia/asistencia.component';
 import {ActividadComponent} from './actividad/actividad.component';
@@ -37,6 +37,6 @@ const routes: Routes = [
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [(RouterModule)]
 })
 export class AppRoutingModule { }
