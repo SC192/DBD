@@ -2,6 +2,7 @@ package com.edu.fiis.assetecback.servicio;
 
 import com.edu.fiis.assetecback.dto.*;
 import com.edu.fiis.assetecback.dto.request.*;
+import com.edu.fiis.assetecback.dto.request.SolicitudExternoRespuesta;
 import com.edu.fiis.assetecback.dto.responses.*;
 
 import java.util.List;

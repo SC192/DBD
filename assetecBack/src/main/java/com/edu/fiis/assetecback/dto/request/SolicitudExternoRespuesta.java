@@ -1,7 +1,6 @@
 package com.edu.fiis.assetecback.dto.request;
 
 import lombok.Data;
-
 @Data
 public class SolicitudExternoRespuesta {
     private Integer CodSolicitud;
