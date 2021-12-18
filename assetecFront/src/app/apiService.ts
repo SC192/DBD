@@ -90,6 +90,7 @@ export class ApiService {
       );
   }
   reporteFechasActividadesProyecto(data: Proyecto): Observable<string[]> {
+    console.log(data);
     return this.http.post<string[]>(this.baseurl + 'reporte-fechas-actividad-proyecto', data, this.httpOptions)
       .pipe(
         retry(1),
