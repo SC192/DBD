@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import {ApiService} from '../apiService';
 import {DataService} from '../services/data.service';
 import {Rol} from '../model';
+import {Actividad} from '../model';
+import {Proyecto} from '../model';
+import {isNumeric} from 'rxjs/internal-compatibility';
 
 @Component({
   selector: 'app-proyecto',
@@ -13,8 +16,10 @@ export class ProyectoComponent implements OnInit {
   i: number = 0;
   j: number = 0;
   m: number = 0;
+  a: number = 0;
   costoTotal: number = 0;
   roles: Rol [] = [];
+  actividades: Actividad [] = [];
 
   constructor(private apiservice: ApiService, public dataService: DataService) { }
 
@@ -38,10 +43,9 @@ export class ProyectoComponent implements OnInit {
   listaActividades(): void{
     this.apiservice.obtenerActividadesProyecto(this.dataService.proyecto).subscribe((data) => {
       this.dataService.proyecto.actividades = data;
+      this.asociarActividades();
     });
-    console.log(this.dataService.proyecto.actividades.length);
     this.lista = 'actividades';
-    this.asociarActividades();
   }
   infoActividad(index: number): void{
     this.dataService.actividad = this.dataService.proyecto.actividades[index];
@@ -63,15 +67,16 @@ export class ProyectoComponent implements OnInit {
   }
   // no funciona
   asociarActividades(): void{
-    for (this.i = 0; this.i < this.dataService.proyecto.actividades.length; this.i++){
+    this.a = this.dataService.proyecto.actividades.length;
+    for (this.i = 0; this.i < this.a; this.i++){
       if (this.dataService.proyecto.actividades[this.i].codActividadPadre != null) {
         this.j = 0;
-        while (this.j < this.dataService.proyecto.actividades.length) {
+        while (this.j < this.a) {
           if (this.dataService.proyecto.actividades[this.j].codigoActividad === this.dataService.proyecto.actividades[this.i].codActividadPadre) {
             this.dataService.proyecto.actividades[this.i].posicionF = this.dataService.proyecto.actividades[this.j].posicion * 10 + this.dataService.proyecto.actividades[this.i].posicion;
             this.m = this.dataService.proyecto.actividades[this.j].actividadesHijas.length;
             this.dataService.proyecto.actividades[this.j].actividadesHijas[this.m] = this.dataService.proyecto.actividades[this.i];
-            this.j = this.dataService.proyecto.actividades.length;
+            this.j = this.a;
           }
           else {
             this.j++;
