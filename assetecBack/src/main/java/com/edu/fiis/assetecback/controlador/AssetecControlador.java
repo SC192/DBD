@@ -347,7 +347,7 @@ public class AssetecControlador {
             produces = "application/json;charset=utf-8",
             method = RequestMethod.POST
     )
-    public @ResponseBody String reporteFechasProyecto(@RequestBody Proyecto proyecto) {
+    public @ResponseBody List<String> reporteFechasProyecto(@RequestBody Proyecto proyecto) {
         return assetecServicio.reporteFechasProyecto(proyecto);
     }
 

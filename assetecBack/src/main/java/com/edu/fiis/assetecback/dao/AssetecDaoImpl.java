@@ -754,8 +754,8 @@ public class AssetecDaoImpl implements AssetecDao{
         return oraciones;
     }
 
-    public String reporteFechasProyecto(Proyecto proyecto) {
-        String texto = "";
+    public List<String> reporteFechasProyecto(Proyecto proyecto) {
+        List<String> oraciones = new ArrayList<>();
         String sql = "SELECT\n" +
                 "'El proyecto ' || nombre ||\n" +
                 "CASE\n" +
@@ -791,7 +791,7 @@ public class AssetecDaoImpl implements AssetecDao{
 
             ResultSet rs = ps.executeQuery();
             while(rs.next()) {
-                texto = rs.getString("TEXTO");
+                oraciones.add(rs.getString("oracion"));
             }
             rs.close();
             ps.close();
@@ -799,7 +799,7 @@ public class AssetecDaoImpl implements AssetecDao{
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return texto;
+        return oraciones;
     }
 
     public List<String> reporteFechasActividadesProyecto(Proyecto proyecto) {

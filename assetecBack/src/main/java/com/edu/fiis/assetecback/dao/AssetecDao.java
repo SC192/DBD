@@ -30,6 +30,6 @@ public interface AssetecDao {
     void generarCierre(Proyecto proyecto);
     List<ReporteResponse> traerReportesProyecto(Proyecto proyecto);
     List<String> reporteGastosActividad(Proyecto proyecto);
-    String reporteFechasProyecto(Proyecto proyecto);
+    List<String> reporteFechasProyecto(Proyecto proyecto);
     List<String> reporteFechasActividadesProyecto(Proyecto proyecto);
 }

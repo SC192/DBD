@@ -157,7 +157,7 @@ public class AssetecServicioImpl implements AssetecServicio{
         return dao.reporteGastosActividad(proyecto);
     }
 
-    public String reporteFechasProyecto(Proyecto proyecto) {
+    public List<String> reporteFechasProyecto(Proyecto proyecto) {
         return dao.reporteFechasProyecto(proyecto);
     }
 
