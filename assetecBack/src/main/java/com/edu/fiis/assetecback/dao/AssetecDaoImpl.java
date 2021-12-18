@@ -723,7 +723,7 @@ public class AssetecDaoImpl implements AssetecDao{
                 "'En la actividad ' || (SELECT NOMBRE FROM ACTIVIDAD WHERE COD_ACTIVIDAD = PA.COD_ACTIVIDAD_PADRE) ||\n" +
                 "' se gasto ' || SUM(CONVERTIR_MONTO(CP.IMPORTE,M1.NOMBRE)) || ' soles. '||\n" +
                 "'Además la empresa cubre con los gastos hasta por ' ||\n" +
-                "MAX(CONVERTIR_MONTO(G.MAX_REMU,M2.NOMBRE)) || ' soles.' AS oracion\n" +
+                "MAX(CONVERTIR_MONTO(G.MAX_REMU,M2.NOMBRE)) || ' soles.' AS oracion " +
                 "FROM PROYECTO_ACTIVIDADES PA\n" +
                 "INNER JOIN COMPROBANTE_PAGO CP\n" +
                 "ON PA.COD_ACTIVIDAD_PADRE = CP.COD_ACTIVIDAD OR PA.CODIGO_ACT_HIJA = CP.COD_ACTIVIDAD\n" +
@@ -754,34 +754,34 @@ public class AssetecDaoImpl implements AssetecDao{
         return oraciones;
     }
 
-    public String reporteFechasProyecto(Proyecto proyecto) {
-        String texto = "";
-        String sql = "SELECT\n" +
-                "'El proyecto ' || nombre ||\n" +
-                "CASE\n" +
-                "  WHEN FECHA_INICIO_REAL - FECHA_INICIO_EST = 1\n" +
-                "    THEN ' tardo 1 dia en iniciar.'\n" +
-                "  WHEN FECHA_INICIO_REAL - FECHA_INICIO_EST > 0\n" +
-                "    THEN ' tardo ' || FECHA_INICIO_REAL - FECHA_INICIO_EST || ' dias en iniciar.'\n" +
-                "  WHEN FECHA_INICIO_REAL - FECHA_INICIO_EST =-1\n" +
+    public List<String> reporteFechasProyecto(Proyecto proyecto) {
+        List<String> oraciones = new ArrayList<>();
+        String sql = "SELECT " +
+                "'El proyecto ' || nombre || " +
+                "CASE " +
+                "  WHEN FECHA_INICIO_REAL - FECHA_INICIO_EST = 1 " +
+                "    THEN ' tardo 1 dia en iniciar.' " +
+                "  WHEN FECHA_INICIO_REAL - FECHA_INICIO_EST > 0 " +
+                "    THEN ' tardo ' || FECHA_INICIO_REAL - FECHA_INICIO_EST || ' dias en iniciar.' " +
+                "  WHEN FECHA_INICIO_REAL - FECHA_INICIO_EST =-1 " +
                 "    THEN ' comenzo 1 dia antes.'\n" +
-                "  WHEN FECHA_INICIO_REAL - FECHA_INICIO_EST < 0\n" +
-                "    THEN ' comenzo ' || FECHA_INICIO_EST - FECHA_INICIO_REAL || ' dias antes.'\n" +
-                "  ELSE ' inicio sin retraso.'\n" +
-                "END\n" +
-                "|| ' Asimismo, el proyecto' ||\n" +
-                "CASE\n" +
-                "  WHEN FECHA_FIN_REAL - FECHA_FIN_EST = 1\n" +
-                "    THEN ' tardo 1 dia en finalizar.'\n" +
-                "  WHEN FECHA_FIN_REAL - FECHA_FIN_EST > 0\n" +
-                "    THEN ' tardo ' || FECHA_FIN_REAL - FECHA_FIN_EST || ' dias en finalizar.'\n" +
-                "  WHEN FECHA_FIN_REAL - FECHA_FIN_EST =-1\n" +
-                "    THEN ' finalizo 1 dia antes.'\n" +
-                "  WHEN FECHA_FIN_REAL - FECHA_FIN_EST < 0\n" +
-                "    THEN ' finalizo ' || FECHA_FIN_EST - FECHA_FIN_REAL || ' dias antes.'\n" +
-                "  ELSE ' finalizo sin retraso.'\n" +
-                "END AS TEXTO\n" +
-                "FROM PROYECTO\n" +
+                "  WHEN FECHA_INICIO_REAL - FECHA_INICIO_EST < 0 " +
+                "    THEN ' comenzo ' || FECHA_INICIO_EST - FECHA_INICIO_REAL || ' dias antes.' " +
+                "  ELSE ' inicio sin retraso.' " +
+                "END " +
+                "|| ' Asimismo, el proyecto' || " +
+                "CASE " +
+                "  WHEN FECHA_FIN_REAL - FECHA_FIN_EST = 1 " +
+                "    THEN ' tardo 1 dia en finalizar.' " +
+                "  WHEN FECHA_FIN_REAL - FECHA_FIN_EST > 0 " +
+                "    THEN ' tardo ' || FECHA_FIN_REAL - FECHA_FIN_EST || ' dias en finalizar.' " +
+                "  WHEN FECHA_FIN_REAL - FECHA_FIN_EST =-1 " +
+                "    THEN ' finalizo 1 dia antes.' " +
+                "  WHEN FECHA_FIN_REAL - FECHA_FIN_EST < 0 " +
+                "    THEN ' finalizo ' || FECHA_FIN_EST - FECHA_FIN_REAL || ' dias antes.' " +
+                "  ELSE ' finalizo sin retraso.' " +
+                "END AS TEXTO " +
+                "FROM PROYECTO " +
                 "WHERE COD_PROYECTO = ?";
         try {
             Connection con = jdbcTemplate.getDataSource().getConnection();
@@ -791,7 +791,7 @@ public class AssetecDaoImpl implements AssetecDao{
 
             ResultSet rs = ps.executeQuery();
             while(rs.next()) {
-                texto = rs.getString("TEXTO");
+                oraciones.add(rs.getString("TEXTO"));
             }
             rs.close();
             ps.close();
@@ -799,7 +799,7 @@ public class AssetecDaoImpl implements AssetecDao{
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return texto;
+        return oraciones;
     }
 
     public List<String> reporteFechasActividadesProyecto(Proyecto proyecto) {

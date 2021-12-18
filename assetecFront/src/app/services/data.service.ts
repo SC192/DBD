@@ -22,7 +22,7 @@ export class DataService {
   };
   public proyecto: Proyecto = null;
   public actividad: Actividad = null;
-  public reporte: string = null;
+  public reporte: string [] = [];
   public datos: string [] = [];
   public gastos: string [] = [];
   public proyectos: Proyecto [] = [];

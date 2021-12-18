@@ -6,7 +6,7 @@ import {
   Actividad,
   Alcance,
   Objetivo,
-  ObjetivoActividad,
+  ObjetivoActividad, Perfil,
   Persona,
   Proyecto,
   RegistroActa,
@@ -82,14 +82,15 @@ export class ApiService {
         catchError(this.errorHandl)
       );
   }
-  reporteFechasProyecto(data: Proyecto): Observable<string> {
-    return this.http.post<string>(this.baseurl + 'reporte-fechas-proyecto', data, this.httpOptions)
+  reporteFechasProyecto(data: Proyecto): Observable<string[]> {
+    return this.http.post<string[]>(this.baseurl + 'reporte-fechas-proyecto', data, this.httpOptions)
       .pipe(
         retry(1),
         catchError(this.errorHandl)
       );
   }
   reporteFechasActividadesProyecto(data: Proyecto): Observable<string[]> {
+    console.log(data);
     return this.http.post<string[]>(this.baseurl + 'reporte-fechas-actividad-proyecto', data, this.httpOptions)
       .pipe(
         retry(1),
