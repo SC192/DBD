@@ -35,7 +35,7 @@ public interface AssetecServicio {
 
 
     void crearActa(RegistroActa registroActa);
-    List<ProyectoDetallado> traerProyectosUsuario(Persona persona);
+    List<Proyecto> traerProyectosUsuario(Persona persona);
     List<Alcance> obtenerAlcancesProyecto(Proyecto proyecto);
     void aceptarActa(RespuestaCliente respuestaCliente);
     List<Actividad> obtenerActividadesProyecto(Proyecto proyecto);

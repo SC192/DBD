@@ -2,7 +2,6 @@ package com.edu.fiis.assetecback.dao;
 
 import com.edu.fiis.assetecback.dto.*;
 import com.edu.fiis.assetecback.dto.request.*;
-import com.edu.fiis.assetecback.dto.responses.ProyectoDetallado;
 import com.edu.fiis.assetecback.dto.responses.ReporteResponse;
 import com.edu.fiis.assetecback.dto.responses.ResumenTrabajador;
 import com.edu.fiis.assetecback.dto.responses.Rol;
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Repository
@@ -110,8 +108,8 @@ public class AssetecDaoImpl implements AssetecDao{
         return persona;
     }
 
-    public List<ProyectoDetallado> traerProyectosUsuario(Persona persona){
-        List<ProyectoDetallado> proyectos = new ArrayList<>();
+    public List<Proyecto> traerProyectosUsuario(Persona persona){
+        List<Proyecto> proyectos = new ArrayList<>();
         String adicional;
         if(esCliente(persona)) {
             adicional = " from proyecto p " +
@@ -143,7 +141,6 @@ public class AssetecDaoImpl implements AssetecDao{
 
             ResultSet rs = ps.executeQuery();
             while(rs.next()) {
-                ProyectoDetallado pd = new ProyectoDetallado();
                 Proyecto p = new Proyecto();
                 p.setCodigoProyecto(rs.getString("COD_PROYECTO"));
                 p.setEstado(rs.getString("ESTADO"));
@@ -153,11 +150,7 @@ public class AssetecDaoImpl implements AssetecDao{
                 p.setFechaFinEstimada(rs.getString("FECHA_FIN_EST"));
                 p.setFechaInicioReal(rs.getString("FECHA_INICIO_REAL"));
                 p.setFechaInicioEstimada(rs.getString("FECHA_INICIO_EST"));
-
-                pd.setProyecto(p);
-                pd.setEncargado(traerEncargadoProyecto(pd.getProyecto()));
-                pd.setCliente(traerClienteProyecto(pd.getProyecto()));
-                proyectos.add(pd);
+                proyectos.add(p);
             }
             rs.close();
             ps.close();

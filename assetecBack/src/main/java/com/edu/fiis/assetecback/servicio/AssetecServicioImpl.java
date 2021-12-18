@@ -77,7 +77,7 @@ public class AssetecServicioImpl implements AssetecServicio{
         dao.crearActa(registroActa);
     }
 
-    public List<ProyectoDetallado> traerProyectosUsuario(Persona persona) {
+    public List<Proyecto> traerProyectosUsuario(Persona persona) {
         return dao.traerProyectosUsuario(persona);
     }
 

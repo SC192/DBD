@@ -149,7 +149,8 @@ public class AssetecControlador {
             produces = "application/json;charset=utf-8",
             method =RequestMethod.POST
     )
-    public @ResponseBody Proyecto iniciarSesion(@RequestBody String codigoProyecto) {
+    public @ResponseBody
+    Proyecto iniciarSesion(@RequestBody String codigoProyecto) {
         return new Proyecto();
     }
 
@@ -167,7 +168,7 @@ public class AssetecControlador {
             produces = "application/json;charset=utf-8",
             method =RequestMethod.POST
     )
-    public @ResponseBody List<ProyectoDetallado> traerProyectosUsuario(@RequestBody Persona persona){
+    public @ResponseBody List<Proyecto> traerProyectosUsuario(@RequestBody Persona persona){
         return assetecServicio.traerProyectosUsuario(persona);
     }
 
