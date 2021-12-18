@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import {ApiService} from "../apiService";
-import {Router} from "@angular/router";
-import {DataService} from "../services/data.service";
+import {ApiService} from '../apiService';
+import {Router} from '@angular/router';
+import {DataService} from '../services/data.service';
 
 @Component({
   selector: 'app-home',
