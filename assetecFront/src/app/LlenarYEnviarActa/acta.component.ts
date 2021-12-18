@@ -15,7 +15,7 @@ import {DataService} from '../services/data.service';
 export class ActaComponent implements OnInit {
   listaAcuerdos: string [] = [];
   acuerdo: string = null;
-  acta: RegistroActa = null;
+  acta: RegistroActa = new RegistroActa([], '');
   i: number = 0;
   constructor(private apiservice: ApiService, public dataService: DataService) { }
 
@@ -37,9 +37,12 @@ export class ActaComponent implements OnInit {
     this.dataService.contacto = false;
   }
   enviarActa(): void{
-    this.apiservice.crearActa(this.acta).subscribe((data) => {
+    /*this.apiservice.crearActa(this.acta).subscribe(() => {
+      this.acta.codigoProyecto = this.dataService.proyecto.codigoProyecto;
+      this.acta.acuerdos = this.listaAcuerdos
       this.dataService.actaGenerada = true;
-    });
+    });*/
+    window.alert('Acta Enviado');
   }
   eliminarAcuerdo(index: number): void{
     for (this.i = index; this.i < this.listaAcuerdos.length; this.i++){
