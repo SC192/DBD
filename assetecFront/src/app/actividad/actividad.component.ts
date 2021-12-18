@@ -50,8 +50,8 @@ export class ActividadComponent implements OnInit {
   calcular(): void{
     this.costoTotal = 0;
     for (this.i = 0; this.i < this.roles.length; this.i++){
-      this.roles[this.i].costoPerfil = this.roles[this.i].totalHoras * this.roles[this.i].costoHora;
-      this.costoTotal = this.costoTotal + this.roles[this.i].costoPerfil;
+      this.roles[this.i].costoHora = this.roles[this.i].totalHoras * this.roles[this.i].costoHora;
+      this.costoTotal = this.costoTotal + this.roles[this.i].costoHora;
     }
   }
 }

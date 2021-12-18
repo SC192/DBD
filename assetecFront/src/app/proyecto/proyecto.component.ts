@@ -13,7 +13,7 @@ export class ProyectoComponent implements OnInit {
   i: number = 0;
   j: number = 0;
   m: number = 0;
-  costoTotal: number;
+  costoTotal: number = 0;
   roles: Rol [] = [];
 
   constructor(private apiservice: ApiService, public dataService: DataService) { }
@@ -39,6 +39,8 @@ export class ProyectoComponent implements OnInit {
     this.apiservice.obtenerActividadesProyecto(this.dataService.proyecto).subscribe((data) => {
       this.dataService.proyecto.actividades = data;
     });
+    this.lista = 'actividades';
+    this.asociarActividades();
   }
   infoActividad(index: number): void{
     this.dataService.actividad = this.dataService.proyecto.actividades[index];
@@ -47,14 +49,16 @@ export class ProyectoComponent implements OnInit {
   listaRoles(): void{
     this.apiservice.obtenerListaRolesProyecto(this.dataService.proyecto).subscribe((data) => {
       this.roles = data;
+      this.calcular();
     });
+    this.lista = 'trabajadores';
   }
   // no funciona
   calcular(): void{
     this.costoTotal = 0;
     for (this.i = 0; this.i < this.roles.length; this.i++){
-      this.roles[this.i].costoPerfil = this.roles[this.i].totalHoras * this.roles[this.i].costoHora;
-      this.costoTotal = this.costoTotal + this.roles[this.i].costoPerfil;
+      // this.roles[this.i].costoHora = this.roles[this.i].totalHoras * this.roles[this.i].costoHora;
+      this.costoTotal = this.costoTotal + this.roles[this.i].costoHora * this.roles[this.i].totalHoras;
     }
   }
   // no funciona

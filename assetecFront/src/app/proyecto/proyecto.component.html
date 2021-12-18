@@ -68,8 +68,8 @@
         <div class="text" *ngFor="let item of dataService.proyecto.objetivos"><span>{{item.posicionF}}</span> {{item.descripcion}}</div>
         <!--Countdown Timer-->
         <div class="time-counter"><div class="time-countdown clearfix" ><div class="counter-column"><div class="inner"><span class="count">{{this.dataService.proyecto.fechaInicioEstimada}}</span>Fecha Inicio</div></div> <div class="counter-column"><div class="inner"><span class="count">{{this.dataService.proyecto.fechaFinEstimada}}</span>Fecha Fin</div></div>  </div></div>
-        <a  class="cart-btn mt-3" (click)="lista = 'actividades'; listaActividades(); asociarActividades()"><i class="fas fa-list"></i> Lista Actividades</a>
-        <a class="cart-btn mt-3" (click)="lista = 'trabajadores'; listaRoles(); calcular()"><i class="fas fa-users"></i> Lista Trabajadores</a>
+        <a  class="cart-btn mt-3" (click)="listaActividades()"><i class="fas fa-list"></i> Lista Actividades</a>
+        <a class="cart-btn mt-3" (click)="listaRoles()"><i class="fas fa-users"></i> Lista Trabajadores</a>
       </div>
       <!--Image Column-->
       <div class="col-lg-4">
@@ -108,13 +108,13 @@
               <td><strong>Nombre rol </strong></td>
               <td>Cant</td>
               <td>Horas</td>
-              <td>Costo</td>
+              <td>Costo/Hora</td>
             </tr>
             <tr *ngFor="let item of roles" class="total-data">
               <td><strong>{{item.nombrePerfil}} </strong></td>
               <td>{{item.cantidad}}</td>
+              <td>{{item.totalHoras}}</td>
               <td>{{item.costoHora}}</td>
-              <td>{{item.costoPerfil}}</td>
             </tr>
             </tbody>
           </table>

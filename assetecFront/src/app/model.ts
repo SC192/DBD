@@ -9,7 +9,6 @@ export class Moneda {
 export class Rol {
   constructor(public cantidad: number,
               public nombrePerfil: string,
-              public costoPerfil: number,
               public totalHoras: number,
               public costoHora: number) {}
 }
