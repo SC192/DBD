@@ -39,6 +39,7 @@ export class ProyectoComponent implements OnInit {
     this.apiservice.obtenerActividadesProyecto(this.dataService.proyecto).subscribe((data) => {
       this.dataService.proyecto.actividades = data;
     });
+    console.log(this.dataService.proyecto.actividades.length);
     this.lista = 'actividades';
     this.asociarActividades();
   }
@@ -53,7 +54,6 @@ export class ProyectoComponent implements OnInit {
     });
     this.lista = 'trabajadores';
   }
-  // no funciona
   calcular(): void{
     this.costoTotal = 0;
     for (this.i = 0; this.i < this.roles.length; this.i++){
@@ -67,7 +67,7 @@ export class ProyectoComponent implements OnInit {
       if (this.dataService.proyecto.actividades[this.i].codActividadPadre != null) {
         this.j = 0;
         while (this.j < this.dataService.proyecto.actividades.length) {
-          if (this.dataService.proyecto.actividades[this.j].codigoActividad == this.dataService.proyecto.actividades[this.i].codActividadPadre) {
+          if (this.dataService.proyecto.actividades[this.j].codigoActividad === this.dataService.proyecto.actividades[this.i].codActividadPadre) {
             this.dataService.proyecto.actividades[this.i].posicionF = this.dataService.proyecto.actividades[this.j].posicion * 10 + this.dataService.proyecto.actividades[this.i].posicion;
             this.m = this.dataService.proyecto.actividades[this.j].actividadesHijas.length;
             this.dataService.proyecto.actividades[this.j].actividadesHijas[this.m] = this.dataService.proyecto.actividades[this.i];
